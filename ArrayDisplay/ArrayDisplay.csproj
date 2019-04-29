@@ -172,7 +172,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Icon\Thumbs.db" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -230,52 +229,6 @@
     <Resource Include="Resource\隐藏_黑.png" />
     <Resource Include="Resource\频谱_黑.png" />
     <Resource Include="Resource\鼠标_黑.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icon\cong.png" />
-    <Resource Include="Icon\win_最小化.png" />
-    <Resource Include="Icon\zoom-in.png" />
-    <Resource Include="Icon\zoom-out.png" />
-    <Resource Include="Icon\上一页.png" />
-    <Resource Include="Icon\下一页.png" />
-    <Resource Include="Icon\串口.png" />
-    <Resource Include="Icon\主.png" />
-    <Resource Include="Icon\主页.png" />
-    <Resource Include="Icon\保存.png" />
-    <Resource Include="Icon\信息.png" />
-    <Resource Include="Icon\关闭.png" />
-    <Resource Include="Icon\刷新.png" />
-    <Resource Include="Icon\前进.png" />
-    <Resource Include="Icon\历史记录.png" />
-    <Resource Include="Icon\后退.png" />
-    <Resource Include="Icon\听声.png" />
-    <Resource Include="Icon\抓.cur" />
-    <Resource Include="Icon\拖动.cur" />
-    <Resource Include="Icon\拖动.png" />
-    <Resource Include="Icon\摄像头.png" />
-    <Resource Include="Icon\收起.png" />
-    <Resource Include="Icon\放大.cur" />
-    <Resource Include="Icon\放大2.cur" />
-    <Resource Include="Icon\文件.png" />
-    <Resource Include="Icon\显示.png" />
-    <Resource Include="Icon\水.png" />
-    <Resource Include="Icon\活动回放.png" />
-    <Resource Include="Icon\系统控制台20.png" />
-    <Resource Include="Icon\缩小.cur" />
-    <Resource Include="Icon\缩小2.cur" />
-    <Resource Include="Icon\网络.png" />
-    <Resource Include="Icon\网络3.png" />
-    <Resource Include="Icon\网络连接.png" />
-    <Resource Include="Icon\脉冲.png" />
-    <Resource Include="Icon\设置.png" />
-    <Resource Include="Icon\轨迹.png" />
-    <Resource Include="Icon\退出.png" />
-    <Resource Include="Icon\通道.png" />
-    <Resource Include="Icon\阵列回放.png" />
-    <Resource Include="Icon\隐藏.png" />
-    <Resource Include="Icon\静音.png" />
-    <Resource Include="Icon\频谱.png" />
-    <Resource Include="Icon\鼠标.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImageButtonControl\UserControl.csproj">
