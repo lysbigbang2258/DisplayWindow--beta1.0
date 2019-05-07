@@ -51,7 +51,11 @@ namespace ArrayDisplay.DiscFile {
             RelativeDirectory rd = new RelativeDirectory();
             origLength = ConstUdpArg.SAVE_ORIGPACK;
             workLength = ConstUdpArg.SAVE_WORKPACK;
-            filepath = rd.Path + "\\" + "wavedata" + "\\";
+            string inipath = Environment.CurrentDirectory + "\\wavedata";
+            if (!Directory.Exists(inipath)) {
+                Directory.CreateDirectory(inipath);
+            }
+            filepath = inipath + "\\";
             IsStartFlag = false;
         }
 
@@ -358,8 +362,8 @@ namespace ArrayDisplay.DiscFile {
 
         /// <inheritdoc />
         public void Dispose() {
-            origResetEvent?.Dispose();
-            workResetEvent?.Dispose();
+            origResetEvent.Dispose();
+            workResetEvent.Dispose();
         }
 
         #endregion
