@@ -30,6 +30,7 @@ namespace ArrayDisplay.Net {
             this.origFrams = 200;
             this.origChannel = 1;
             this.origTdiv = 1;
+            workChannel = 1;
         }
 
         /// <summary>
@@ -44,9 +45,11 @@ namespace ArrayDisplay.Net {
         /// The property name.
         /// </param>
         [NotifyPropertyChangedInvocator]
-        void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+            PropertyChangedEventHandler onPropertyChanged = this.PropertyChanged;
+            if (onPropertyChanged != null) {
+                onPropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         #region Field
@@ -140,7 +143,9 @@ namespace ArrayDisplay.Net {
         /// 设备类型
         /// </summary>
         public string McType {
-            get => this.mcType;
+            get {
+                return this.mcType;
+            }
 
             set {
                 if (value == this.mcType) {
@@ -156,7 +161,9 @@ namespace ArrayDisplay.Net {
         /// 设备ID
         /// </summary>
         public string McId {
-            get => this.mcId;
+            get {
+                return this.mcId;
+            }
 
             set {
                 if (value == this.mcId) {
@@ -172,7 +179,9 @@ namespace ArrayDisplay.Net {
         /// 设备MAC
         /// </summary>
         public string McMac {
-            get => this.mcMac;
+            get {
+                return this.mcMac;
+            }
 
             set {
                 if (value != this.mcMac) {
@@ -187,7 +196,9 @@ namespace ArrayDisplay.Net {
         /// adc偏移
         /// </summary>
         public string AdcOffset {
-            get => this.adcOffset;
+            get {
+                return this.adcOffset;
+            }
 
             set {
                 if (value != this.adcOffset) {
@@ -202,7 +213,9 @@ namespace ArrayDisplay.Net {
         /// adc偏移.adcID
         /// </summary>
         public int AdcNum {
-            get => this.adcNum;
+            get {
+                return this.adcNum;
+            }
 
             set {
                 if (value != this.adcNum) {
@@ -217,7 +230,9 @@ namespace ArrayDisplay.Net {
         /// 脉冲周期
         /// </summary>
         public int PulsePeriod {
-            get => this.pulsePeriod;
+            get {
+                return this.pulsePeriod;
+            }
 
             set {
                 if (value != this.pulsePeriod) {
@@ -232,7 +247,9 @@ namespace ArrayDisplay.Net {
         /// 脉冲延时
         /// </summary>
         public int PulseDelay {
-            get => this.pulseDelay;
+            get {
+                return this.pulseDelay;
+            }
 
             set {
                 if (value != this.pulseDelay) {
@@ -247,7 +264,9 @@ namespace ArrayDisplay.Net {
         /// 脉冲宽度
         /// </summary>
         public int PulseWidth {
-            get => this.pulseWidth;
+            get {
+                return this.pulseWidth;
+            }
 
             set {
                 if (value != this.pulseWidth) {
@@ -262,7 +281,9 @@ namespace ArrayDisplay.Net {
         /// 延时通道
         /// </summary>
         public int DelayChannel {
-            get => this.delayChannel;
+            get {
+                return this.delayChannel;
+            }
 
             set {
                 this.delayChannel = value;
@@ -275,7 +296,9 @@ namespace ArrayDisplay.Net {
         /// 延时时间量
         /// </summary>
         public int DelayTime {
-            get => this.delayTime;
+            get {
+                return this.delayTime;
+            }
 
             set {
                 this.delayTime = value;
@@ -288,7 +311,9 @@ namespace ArrayDisplay.Net {
         /// 工作通道
         /// </summary>
         public int WorkChannel {
-            get => this.workChannel;
+            get {
+                return this.workChannel;
+            }
 
             set {
                 this.workChannel = value;
@@ -301,20 +326,24 @@ namespace ArrayDisplay.Net {
         /// DAC长度
         /// </summary>
         public int DacLenth {
-            get => this.daclen;
+            get {
+                return this.daclen;
+            }
 
             set {
                 this.daclen = value;
                 this.OnPropertyChanged();
             }
         }
-        
+
         /// <summary>
         /// Gets or sets the dac channel.
         /// Dac通道
         /// </summary>
         public int DacChannel {
-            get => this.dacChannel;
+            get {
+                return this.dacChannel;
+            }
 
             set {
                 this.dacChannel = value;
@@ -327,7 +356,9 @@ namespace ArrayDisplay.Net {
         /// 原始数据帧数
         /// </summary>
         public int OrigFramNums {
-            get => this.origFrams;
+            get {
+                return this.origFrams;
+            }
 
             set {
                 this.origFrams = value;
@@ -340,9 +371,13 @@ namespace ArrayDisplay.Net {
         /// // 原始通道
         /// </summary>
         public int OrigChannel {
-            get => this.origChannel;
+            get {
+                return this.origChannel;
+            }
 
-            set => this.origChannel = value;
+            set {
+                this.origChannel = value;
+            }
         }
 
         /// <summary>
@@ -350,10 +385,15 @@ namespace ArrayDisplay.Net {
         /// 原始时分
         /// </summary>
         public int OrigTdiv {
-            get => this.origTdiv;
+            get {
+                return this.origTdiv;
+            }
 
-            set => this.origTdiv = value;
+            set {
+                this.origTdiv = value;
+            }
         }
+
         #endregion
     }
 }

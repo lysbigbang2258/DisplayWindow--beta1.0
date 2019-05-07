@@ -41,33 +41,45 @@ namespace ArrayDisplay.Net {
         /// <param name="ip">
         /// The ip.
         /// </param>
-        public void StartReceiveData(IPEndPoint ip) {
-            this.Ip = ip;
-            try {
-                this.waveSocket.Bind(ip);
-                this.IsBuilded = true;
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// succeeded return true 
+        /// </returns>
+        public bool StartReceiveData(IPEndPoint ip)
+        {
+            Ip = ip;
+            try
+            {
+                waveSocket.Bind(ip);
+                IsBuilded = true;
+                if (string.Equals(ip, ConstUdpArg.Src_NormWaveIp))
+                {
+                    WorktInit();
+                    WaveType = ConstUdpArg.WaveType.Normal;
+                }
+                else if (Equals(ip, ConstUdpArg.Src_OrigWaveIp))
+                {
+                    OrigInit();
+                    WaveType = ConstUdpArg.WaveType.Orig;
+                }
+                else if (Equals(ip, ConstUdpArg.Src_DelayWaveIp))
+                {
+                    DelayInit();
+                    WaveType = ConstUdpArg.WaveType.Delay;
+                }
+
+                WaveDataproc = new Dataproc();
+                WaveDataproc.Init(WaveType);
+                RcvThread.Start();
+                return true;
             }
-            catch(Exception e) {
+            catch (Exception e)
+            {
                 Console.WriteLine(@"创建UDP失败...错误为{0}", e);
                 MessageBox.Show(@"创建UDP失败...");
             }
 
-            if (string.Equals(ip, ConstUdpArg.Src_NormWaveIp)) {
-                this.WorktInit();
-                this.WaveType = ConstUdpArg.WaveType.Normal;
-            }
-            else if (Equals(ip, ConstUdpArg.Src_OrigWaveIp)) {
-                this.OrigInit();
-                this.WaveType = ConstUdpArg.WaveType.Orig;
-            }
-            else if (Equals(ip, ConstUdpArg.Src_DelayWaveIp)) {
-                this.DelayInit();
-                this.WaveType = ConstUdpArg.WaveType.Delay;
-            }
-
-            this.WaveDataproc = new Dataproc();
-            this.WaveDataproc.Init(this.WaveType);
-            this.RcvThread.Start();
+            return false;
         }
 
         /// <summary>
@@ -448,7 +460,14 @@ namespace ArrayDisplay.Net {
         /// <summary>
         /// 标志位
         /// </summary>
-        public bool ExitFlag { get => this.exitFlag; set => this.exitFlag = value; }
+        public bool ExitFlag {
+            get {
+                return this.exitFlag;
+            }
+            set {
+                this.exitFlag = value;
+            }
+        }
 
         /// <summary>
         /// 数据处理线程
@@ -479,9 +498,6 @@ namespace ArrayDisplay.Net {
                     this.StartRcvEvent.Dispose();
                 }
 
-                if (this.StartRcvEvent != null) {
-                    this.StartRcvEvent.Dispose();
-                }
 
                 if (this.RcvThread != null) {
                     this.RcvThread.Abort();

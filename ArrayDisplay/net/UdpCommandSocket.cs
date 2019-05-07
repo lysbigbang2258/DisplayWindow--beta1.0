@@ -32,7 +32,7 @@ namespace ArrayDisplay.Net {
             this.sedsocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             this.sedsocket.SendTimeout = 1000;
             this.sedsocket.ReceiveTimeout = 1000;
-            this.Init();
+            
         }
 
         public void RcvThreadStart() {
@@ -63,19 +63,19 @@ namespace ArrayDisplay.Net {
         /// <summary>
         ///     初始化Socket，绑定IP
         /// </summary>
-        public void Init() {
+        public bool Init() {
             try {
                 this.SedIp = ConstUdpArg.Src_ComMsgIp;
                 this.RcvIp = ConstUdpArg.Src_ComDatIp;
                 this.rcvsocket.Bind(this.RcvIp);
                 this.sedsocket.Bind(this.SedIp);
-                this.TestConnect();
+                return true;
+
             }
-            catch(Exception e) {
-                Console.WriteLine(@"创建UDP失败...错误为{0}", e);
-                MessageBox.Show(@"创建UDP失败...");
+            catch(Exception ) {
+                MessageBox.Show(@"网络初始化失败");
             }
-           
+            return false;
         }
 
         public void TestConnect() {
@@ -90,7 +90,7 @@ namespace ArrayDisplay.Net {
             }
             catch (Exception e)
             {
-                Console.WriteLine(@"网络连接失败");
+                MessageBox.Show(@"网络连接失败");
                 this.IsSocketConnect = false;
             }
         }
