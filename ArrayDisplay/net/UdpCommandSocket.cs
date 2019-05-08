@@ -78,21 +78,28 @@ namespace ArrayDisplay.Net {
             return false;
         }
 
-        public void TestConnect() {
+        /// <summary>
+        /// The test web connect.
+        /// </summary>
+        public bool TestConnect() {
             this.sedsocket.SendTo(ConstUdpArg.SwicthToOriginalWindow, ConstUdpArg.Dst_ComMsgIp);
             var testBuffer = new byte[18];
             EndPoint testRemote = new IPEndPoint(IPAddress.Any, 0);
             int offset = 0;
+            bool retflag = false;
             try
             {
                 int ret = this.sedsocket.ReceiveFrom(testBuffer, offset, testBuffer.Length - offset, SocketFlags.None, ref testRemote);
                 this.IsSocketConnect = true;
+                retflag = true;
             }
             catch (Exception e)
             {
                 MessageBox.Show(@"网络连接失败");
                 this.IsSocketConnect = false;
+                
             }
+            return retflag;
         }
 
         /// <summary>///切换功能窗口（波形或命令）/// </summary>
@@ -304,7 +311,7 @@ namespace ArrayDisplay.Net {
 
         /// <summary>///读取延时信息/// </summary>
         public void ReadDelyTime() {
-            var sedip = ConstUdpArg.GetDelayTimeReadCommand(DisPlayWindow.Info.DelayChannel);
+            var sedip = ConstUdpArg.GetDelayTimeReadCommand(DisPlayWindow.Info.DelayChannel - 1);
             this.Send(sedip, ConstUdpArg.Dst_ComMsgIp);
             this.ReceiveChannelDeleyTime(20);
         }
@@ -351,10 +358,10 @@ namespace ArrayDisplay.Net {
             this.Send(sendData, ConstUdpArg.Dst_ComMsgIp);
         }
 
-        /// <summary>写:脉冲宽度</summary>
+        /// <summary>写:延时时间</summary>
         /// <param name="data">数据,16bit,配置值/5</param>
         public void WriteDelayTime(byte[] data) {
-            var tmp = ConstUdpArg.GetDelayTimeWriteCommand(int.Parse(DisPlayWindow.HMainWindow.tb_deleyChannel.Text) - 1);
+            var tmp = ConstUdpArg.GetDelayTimeWriteCommand(DisPlayWindow.Info.DelayChannel - 1 );
             this.WriteData(tmp, data);
         }
 
@@ -794,7 +801,7 @@ namespace ArrayDisplay.Net {
                 Console.WriteLine("adc_offset={0}", adcOffset.ToString("G2"));
                 DisPlayWindow.Info.AdcOffset = adcOffset.ToString("G2");
             }
-            else if (Encoding.ASCII.GetString(ConstUdpArg.GetDelayTimeReadCommand(DisPlayWindow.Info.DelayChannel), 0, 6).Equals(cmd)) {
+            else if (Encoding.ASCII.GetString(ConstUdpArg.GetDelayTimeReadCommand(DisPlayWindow.Info.DelayChannel - 1), 0, 6).Equals(cmd)) {
                 // 延迟通道
                 byte t = data[0];
                 data[0] = data[1];

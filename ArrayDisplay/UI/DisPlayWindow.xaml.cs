@@ -1,4 +1,13 @@
-﻿namespace ArrayDisplay.UI {
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="DisPlayWindow.xaml.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   DisPlayWindow.xaml 的交互逻辑
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace ArrayDisplay.UI {
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -259,14 +268,38 @@
             dataFile = new DataFile();
             udpCommandSocket = new UdpCommandSocket();
 
-            if (udpCommandSocket.Init()) {
-                udpCommandSocket.TestConnect();
+            if (!udpCommandSocket.Init()) {
+                return;
             }
+
+            if (!udpCommandSocket.TestConnect()) {
+                return;
+            }
+                
+            LoadDeviceState();
 
             observableCollection = new ObservableCollection<UIBValue>();
             blistview.ItemsSource = observableCollection;
 
             ControlsSetBinding();
+        }
+
+        /// <summary>
+        /// The load device state.
+        /// </summary>
+        void LoadDeviceState() {
+                
+                Task.Run(() => {
+                             udpCommandSocket.SwitchWindow(ConstUdpArg.SwicthToStateWindow);
+                             try {
+                                 
+                                 udpCommandSocket.GetDeviceState();
+                             }
+                             catch(Exception exception) {
+                                 Console.WriteLine(exception);
+                             }
+                         });
+            
         }
 
         /// <summary>
@@ -300,7 +333,10 @@
             tb_workChannel.SetBinding(TextBox.TextProperty, new Binding("WorkChannel") { Source = Info, Mode = BindingMode.TwoWay });
         }
 
-        void InitGrapheState() {
+        /// <summary>
+        /// The init graph state.
+        /// </summary>
+        void InitGraphState() {
             IsGraphPause = false;
 
             if (OrigWaveData != null) {
@@ -348,7 +384,7 @@
                     Task.Run(
                              () => {
                                  udpCommandSocket.SwitchWindow(ConstUdpArg.SwicthToDeleyWindow);
-                                 InitGrapheState();
+                                 InitGraphState();
                                  Console.WriteLine("关闭延时波形");
                              });
                 }
@@ -358,7 +394,7 @@
                     Task.Run(
                              () => {
                                  udpCommandSocket.SwitchWindow(ConstUdpArg.SwicthToOriginalWindow);
-                                 InitGrapheState();
+                                 InitGraphState();
                                  Console.WriteLine("关闭原始波形");
                              });
                 }
@@ -368,7 +404,7 @@
                     Task.Run(
                              () => {
                                  udpCommandSocket.SwitchWindow(ConstUdpArg.SwicthToNormalWindow);
-                                 InitGrapheState();
+                                 InitGraphState();
                                  Console.WriteLine("关闭正常工作波形");
                              });
                 }
@@ -445,7 +481,7 @@
                              else if (DelayWaveData != null || DelayWaveData.IsBuilded)
                              {
                                  try {
-                                     InitGrapheState();
+                                     InitGraphState();
                                      btn_delaystart.Dispatcher.InvokeAsync(
                                                                            () =>
                                                                            {
@@ -696,7 +732,7 @@
                     OrigWaveData.StartRcvEvent.Set();
                 }
                 else if (OrigWaveData != null || OrigWaveData.IsBuilded) {
-                    InitGrapheState();
+                    InitGraphState();
                     btn_origstart.Content = "启动";
 
                     orige_graph.Dispatcher.InvokeAsync(
@@ -981,27 +1017,29 @@
         }
 
         /// <summary>
-        ///     发送初始相位和B值
+        /// The send config_ on click.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         void SendConfig_OnClick(object sender, RoutedEventArgs e) {
             try {
                 SendBvalue();
                 SendPhase();
-                MessageBox.Show("发送成功");
             }
             catch(Exception exception) {
                 Console.WriteLine(exception);
                 throw;
             }
+            MessageBox.Show("发送成功");
         }
 
         /// <summary>
-        ///     发送B值
+        /// The send bvalue.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void SendBvalue() {
             if (!udpCommandSocket.IsSocketConnect) {
                 return;
@@ -1013,6 +1051,10 @@
 
             string filename = "B值.txt";
             string filepath = dirpath + "\\" + filename;
+            if (!File.Exists(filepath)) {
+                MessageBox.Show("请先计算B值并保存");
+                return;
+            }
             var bfloats = ReadDiscValue(filepath, 2);
             WaveSocket socket = new WaveSocket();
             var result = socket.GetSendBvalues(bfloats);
@@ -1021,10 +1063,8 @@
         }
 
         /// <summary>
-        ///     发送初始相位
+        /// The send phase.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void SendPhase() {
             if (!udpCommandSocket.IsSocketConnect) {
                 return;
@@ -1036,6 +1076,11 @@
 
             string filename = "初始相位.txt";
             string filepath = dirpath + "\\" + filename;
+
+            if (!File.Exists(filepath)) {
+                MessageBox.Show("请先计算初始相位并保存");
+                return;
+            }
             var bfloats = ReadDiscValue(filepath, 1);
             WaveSocket socket = new WaveSocket();
             var result = socket.GetSendPhases(bfloats);
@@ -1274,7 +1319,7 @@
                     NormWaveData.StartRcvEvent.Set();
                 }
                 else if (NormWaveData != null || NormWaveData.IsBuilded) {
-                    InitGrapheState();
+                    InitGraphState();
                     graph_normalTime.Dispatcher.InvokeAsync(
                                                             () => {
                                                                 graph_normalTime.DataSource = 0;

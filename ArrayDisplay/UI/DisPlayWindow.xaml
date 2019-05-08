@@ -96,6 +96,7 @@
                     Height="{Binding ElementName=waveGrid, Path=Height}"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
+                    Background="#FFE5E5E5"
                     SelectionChanged="TabControl_OnSelectionChanged"
                     TabStripPlacement="Right">
                     <TabItem
@@ -103,7 +104,7 @@
                         Width="100"
                         Height="40"
                         Header="系统设置">
-                        <Grid x:Name="stateGrid" Grid.Row="0">
+                        <Grid x:Name="stateGrid">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="360*" />
                                 <ColumnDefinition Width="540*" />
@@ -112,6 +113,8 @@
                             <Grid
                                 x:Name="systemstateGrid"
                                 Grid.Column="0"
+                                Height="300"
+                                VerticalAlignment="Top"
                                 Background="#FFE5E5E5">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="20*" />
@@ -121,7 +124,6 @@
                                 </Grid.RowDefinitions>
                                 <Label
                                     Grid.Row="0"
-                                    Grid.Column="0"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Content="系统状态"
@@ -193,9 +195,9 @@
                             <Grid
                                 x:Name="configGrid"
                                 Grid.Column="1"
-                                Height="233"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
+                                Height="300"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
                                 Background="#FFE5E5E5">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="21*" />
@@ -461,7 +463,6 @@
                                     </StackPanel>
                                 </Grid>
                             </Grid>
-
                         </Grid>
                     </TabItem>
 
@@ -587,7 +588,7 @@
                                     </ni:Graph.Axes>
                                     <ni:Graph.Plots>
                                         <ni:Plot>
-                                            <ni:LinePlotRenderer Stroke="Green" />
+                                            <ni:LinePlotRenderer Stroke="Green" StrokeThickness="3" />
                                         </ni:Plot>
                                     </ni:Graph.Plots>
                                 </ni:Graph>
@@ -885,6 +886,7 @@
                     <TabItem
                         Name="normalItem"
                         Width="100"
+                        Height="40"
                         Header="解调数据">
                         <Grid Background="#FFE5E5E5">
                             <Grid.RowDefinitions>
@@ -1113,42 +1115,56 @@
                                     <GridSplitter Grid.Row="3" Height="10" />
                                 </Grid>
                                 <GridSplitter Grid.Column="1" Width="10" />
-                                <ni:Graph x:Name="graph_energyFirst" Grid.Column="2">
-                                    <ni:Graph.Axes>
-                                        <ni:AxisDouble
-                                            x:Name="xScale3"
-                                            Adjuster="None"
-                                            MinorDivisions="{x:Null}"
-                                            Orientation="Horizontal"
-                                            Range="1,64">
-                                            <ni:AxisDouble.MajorGridLines>
-                                                <ni:GridLines
-                                                    Stroke="Orange"
-                                                    StrokeDashArray="4,2"
-                                                    StrokeDashCap="Round"
-                                                    StrokeDashOffset="1"
-                                                    StrokeThickness="2" />
-                                            </ni:AxisDouble.MajorGridLines>
-                                        </ni:AxisDouble>
-                                        <ni:AxisDouble
-                                            x:Name="yScale3"
-                                            Adjuster="None"
-                                            Label="Ampliton"
-                                            MinorDivisions="{x:Null}"
-                                            Orientation="Vertical"
-                                            Range="0,50" />
-                                    </ni:Graph.Axes>
-                                    <ni:Graph.DefaultPlotRenderers>
-                                        <ni:BarPlotRenderer
-                                            BarWidth="0.5"
-                                            Fill="Purple"
-                                            Stroke="White"
-                                            StrokeThickness="0" />
-                                    </ni:Graph.DefaultPlotRenderers>
+                                <Grid Name="energystackPanel" Grid.Column="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        Foreground="Black"
+                                        TextAlignment="Center">
+                                        <Run Text="基元能量图（横坐标：基元号" /> <Run Text="纵坐标：归一化能量）" />
+                                    </TextBlock>
+                                    <ni:Graph
+                                        x:Name="graph_energyFirst"
+                                        Grid.Row="1"
+                                        Width="{Binding ElementName=energystackPanel, Path=Width}">
 
-                                </ni:Graph>
+                                        <ni:Graph.Axes>
+                                            <ni:AxisDouble
+                                                x:Name="xScale3"
+                                                Adjuster="None"
+                                                MinorDivisions="{x:Null}"
+                                                Orientation="Horizontal"
+                                                Range="1,64">
+                                                <ni:AxisDouble.MajorGridLines>
+                                                    <ni:GridLines
+                                                        Stroke="Orange"
+                                                        StrokeDashArray="4,2"
+                                                        StrokeDashCap="Round"
+                                                        StrokeDashOffset="1"
+                                                        StrokeThickness="2" />
+                                                </ni:AxisDouble.MajorGridLines>
+                                            </ni:AxisDouble>
+                                            <ni:AxisDouble
+                                                x:Name="yScale3"
+                                                Adjuster="None"
+                                                Label="Ampliton"
+                                                MinorDivisions="{x:Null}"
+                                                Orientation="Vertical"
+                                                Range="0,50" />
+                                        </ni:Graph.Axes>
+                                        <ni:Graph.DefaultPlotRenderers>
+                                            <ni:BarPlotRenderer
+                                                BarWidth="1"
+                                                Fill="Purple"
+                                                Stroke="White"
+                                                StrokeThickness="0" />
+                                        </ni:Graph.DefaultPlotRenderers>
 
-
+                                    </ni:Graph>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </TabItem>

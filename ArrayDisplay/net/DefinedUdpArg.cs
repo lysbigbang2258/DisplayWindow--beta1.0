@@ -325,7 +325,7 @@ namespace ArrayDisplay.Net {
         public static byte[] GetDelayTimeReadCommand(int idcNum) {
             var channel = new byte[DelayChannel_Read.Length];
             Array.Copy(DelayChannel_Read, 0, channel, 0, DelayChannel_Read.Length);
-            channel.SetValue((byte) (channel[5] + (idcNum - 1) * 2), 5);
+            channel.SetValue((byte) (channel[5] + (idcNum) * 2), 5);
             return channel;
         }
         /// <summary>读指令:DacChannel</summary>

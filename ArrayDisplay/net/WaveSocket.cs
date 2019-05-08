@@ -171,6 +171,7 @@ namespace ArrayDisplay.Net {
 
                     if (index<0 || index>31) {
                         Console.WriteLine("Index Error！");
+                        return;
                     }
 
                     this.RcvPhaseData[index] = new short[sbdata.Length];
@@ -182,9 +183,6 @@ namespace ArrayDisplay.Net {
                     Console.WriteLine(e);
                     throw;
                 }
-
-                stopwatch.Stop();
-                Console.WriteLine("RCVTime:" + stopwatch.ElapsedMilliseconds);
                 this.RcvResetEvent.Reset(); // 线程继续等待
             }
 
@@ -298,20 +296,21 @@ namespace ArrayDisplay.Net {
         /// </summary>
         /// <param name="rcvPahseArray">采集原始数据值</param>
         /// <returns>初始相位float型</returns>
-        float[] CalToPhase(short[][] rcvPahseArray)
-        {
-            var calphase = new short[40][];
-            var calcos = new float[40][];
-            var calsin = new float[40][];
-            var meancos = new float[40];
-            var meansin = new float[40];
+        float[] CalToPhase(short[][] rcvPahseArray) {
+            int periodPoints = 16; // 一个周期点数
+            int periodNum = rcvPahseArray[0].Length/ periodPoints; // 周期
+            var calphase = new short[periodNum][];
+            var calcos = new float[periodNum][];
+            var calsin = new float[periodNum][];
+            var meancos = new float[periodNum];
+            var meansin = new float[periodNum];
             var caltin = new float[8];
 
             for (int i = 0; i < calphase.Length; i++)
             {
-                calphase[i] = new short[16];
-                calcos[i] = new float[16];
-                calsin[i] = new float[16];
+                calphase[i] = new short[periodPoints];
+                calcos[i] = new float[periodPoints];
+                calsin[i] = new float[periodPoints];
 
             }
 
@@ -319,14 +318,14 @@ namespace ArrayDisplay.Net {
                 var array = rcvPahseArray[index];
                 for (int i = 0; i < array.Length; i++) {
                     // 16个采样点表示1周期，
-                    var frams = i / 16;
-                    var num = i % 16;
+                    var frams = i / periodPoints;
+                    var num = i % periodPoints;
                     calphase[frams][num] = array[i];
                 }
 
                 for (int i = 0; i < calphase.Length; i++)
                 {
-                    for (int j = 0; j < 16; j++)
+                    for (int j = 0; j < periodPoints; j++)
                     {
                         calcos[i][j] =(float)(calphase[i][j] * Math.Cos(Math.PI / 8 * j));
                         calsin[i][j] =(float)(calphase[i][j] * Math.Sin(Math.PI / 8 * j)); 
