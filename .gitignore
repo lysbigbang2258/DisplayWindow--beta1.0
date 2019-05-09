@@ -78,11 +78,10 @@ ModelManifest.xml
 
 #zzzili
 v15/
+.gitignore
 .user
 --------------------- 
 obj
 /ArrayDisplay/obj/Debug
 /ArrayDisplay/bin/Debug
 /ArrayDisplay/bin
-.vs/
-
