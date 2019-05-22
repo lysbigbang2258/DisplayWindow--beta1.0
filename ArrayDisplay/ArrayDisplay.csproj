@@ -33,7 +33,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -45,23 +45,21 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>dll\debug\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="NationalInstruments.Analysis.Enterprise, Version=15.0.45.49153, Culture=neutral, PublicKeyToken=4febd62461bf11a4, processorArchitecture=MSIL">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\NI_DLL\NationalInstruments.Analysis.Enterprise.dll</HintPath>
     </Reference>
     <Reference Include="NationalInstruments.Common, Version=17.5.40.49153, Culture=neutral, PublicKeyToken=dc6ad606294fc298, processorArchitecture=MSIL">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\NI_DLL\NationalInstruments.Common.dll</HintPath>
     </Reference>
     <Reference Include="NationalInstruments.Controls, Version=15.0.45.3898, Culture=neutral, PublicKeyToken=4febd62461bf11a4, processorArchitecture=MSIL">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="NationalInstruments.Controls.Booleans, Version=15.0.45.3898, Culture=neutral, PublicKeyToken=4febd62461bf11a4, processorArchitecture=MSIL">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\NI_DLL\NationalInstruments.Controls.dll</HintPath>
     </Reference>
     <Reference Include="NationalInstruments.Controls.Graphs, Version=15.0.45.3898, Culture=neutral, PublicKeyToken=4febd62461bf11a4, processorArchitecture=MSIL">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\NI_DLL\NationalInstruments.Controls.Graphs.dll</HintPath>
     </Reference>
     <Reference Include="SlimDX">
       <HintPath>dll\debug\SlimDX.dll</HintPath>
@@ -240,12 +238,6 @@
     <Resource Include="Resource\隐藏_黑.png" />
     <Resource Include="Resource\频谱_黑.png" />
     <Resource Include="Resource\鼠标_黑.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ImageButtonControl\UserControl.csproj">
-      <Project>{13ff71db-6bb2-4a25-a862-ba8ab2d0b97d}</Project>
-      <Name>UserControl</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">

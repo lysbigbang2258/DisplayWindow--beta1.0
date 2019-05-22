@@ -486,15 +486,15 @@ namespace ArrayDisplay.Net {
         public const int ARRAY_USED = 64; //阵元数
         //Buffer设置
 //        public const int WORK_FRAME_NUMS = 31250; //正常工作波形同时显示帧数
-        public const int WORK_FRAME_NUMS = 1024*16; //正常工作波形同时显示帧数
-        public const int WORK_FRAME_LENGTH = 1024; // 正常工作波形帧长
+        public const int WORK_FRAME_NUMS = 10000; //正常工作波形同时显示帧数 50k采样率，取1/5秒
+        public const int WORK_FRAME_LENGTH = 256; // 正常工作波形帧长
         //能量图像素长度
         public const int MAX_ENERGY_PIXELS_LENGTH = 70;
         public const int MIN_ENERGY_PIXELS_LENGTH = 0;
         public const int DEAFULT_ENERGY_PIXELS_LENGTH = 30;
 
         public const int ORIG_FRAME_NUMS = 200; //原始工作波形同时显示帧数
-        public const int ORIG_FRAME_LENGTH = 1282; //原始工作波形帧长
+        public const int ORIG_FRAME_LENGTH = 1280; //原始工作波形帧长
         public const int ORIG_DETECT_LENGTH = 64;  
         public const int ORIG_TIME_NUMS = 8;
         public const int ORIG_TIME_OLDNUMS= 32;

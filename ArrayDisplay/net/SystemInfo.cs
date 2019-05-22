@@ -1,5 +1,6 @@
 ﻿// 201812284:30 PM
 namespace ArrayDisplay.Net {
+    using System;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
@@ -9,49 +10,6 @@ namespace ArrayDisplay.Net {
     /// The system info.
     /// </summary>
     public sealed class SystemInfo : INotifyPropertyChanged {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SystemInfo"/> class.
-        /// </summary>
-        public SystemInfo() {
-            this.mcId = string.Empty;
-            this.mcMac = string.Empty;
-            this.mcType = string.Empty;
-            this.pulseDelay = -1;
-            this.pulsePeriod = -1;
-            this.pulseWidth = -1;
-            this.adcNum = 1;
-
-            this.adcOffset = string.Empty;
-            this.delayChannel = 1;
-            this.delayTime = 1;
-
-            this.daclen = 3000;
-            this.dacChannel = 2;
-            this.origFrams = 200;
-            this.origChannel = 1;
-            this.origTdiv = 1;
-            workChannel = 1;
-        }
-
-        /// <summary>
-        /// The property changed.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// The on property changed.
-        /// </summary>
-        /// <param name="propertyName">
-        /// The property name.
-        /// </param>
-        [NotifyPropertyChangedInvocator]
-        void OnPropertyChanged([CallerMemberName] string propertyName = null) {
-            PropertyChangedEventHandler onPropertyChanged = this.PropertyChanged;
-            if (onPropertyChanged != null) {
-                onPropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
         #region Field
 
         /// <summary>
@@ -105,9 +63,9 @@ namespace ArrayDisplay.Net {
         int delayTime;
 
         /// <summary>
-        /// The daclen.
+        /// The dacLen.
         /// </summary>
-        int daclen;
+        int dacLen;
 
         /// <summary>
         /// The dac channel.
@@ -134,9 +92,12 @@ namespace ArrayDisplay.Net {
         /// </summary>
         int workChannel;
 
+        int workSaveTime;
         #endregion
 
         #region Property
+
+        #region State Info
 
         /// <summary>
         /// Gets or sets the mc type.
@@ -156,7 +117,7 @@ namespace ArrayDisplay.Net {
             }
         }
 
-        /// <summary>
+              /// <summary>
         /// Gets or sets the mc id.
         /// 设备ID
         /// </summary>
@@ -184,10 +145,11 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (value != this.mcMac) {
-                    this.mcMac = value;
-                    this.OnPropertyChanged();
+                if (value == this.mcMac) {
+                    return;   
                 }
+                this.mcMac = value;
+                this.OnPropertyChanged();
             }
         }
 
@@ -201,10 +163,11 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (value != this.adcOffset) {
-                    this.adcOffset = value;
-                    this.OnPropertyChanged();
+                if (value == this.adcOffset) {
+                    return;
                 }
+                this.adcOffset = value;
+                this.OnPropertyChanged();
             }
         }
 
@@ -218,10 +181,11 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (value != this.adcNum) {
-                    this.adcNum = value;
-                    this.OnPropertyChanged();
+                if (value == this.adcNum) {
+                    return;
                 }
+                this.adcNum = value;
+                this.OnPropertyChanged();
             }
         }
 
@@ -235,10 +199,11 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (value != this.pulsePeriod) {
-                    this.pulsePeriod = value;
-                    this.OnPropertyChanged();
-                }
+                if (value == this.pulsePeriod) {
+                   return;
+                } 
+                this.pulsePeriod = value;
+                this.OnPropertyChanged();
             }
         }
 
@@ -252,10 +217,11 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (value != this.pulseDelay) {
-                    this.pulseDelay = value;
-                    this.OnPropertyChanged();
+                if (value == this.pulseDelay) {
+                   return;
                 }
+                this.pulseDelay = value;
+                this.OnPropertyChanged();
             }
         }
 
@@ -269,13 +235,18 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (value != this.pulseWidth) {
-                    this.pulseWidth = value;
-                    this.OnPropertyChanged();
+                if (value == this.pulseWidth) {
+                    return;
                 }
+                this.pulseWidth = value;
+                this.OnPropertyChanged();
             }
         }
 
+        #endregion
+
+        #region Wave Info
+        
         /// <summary>
         /// Gets or sets the delay channel.
         /// 延时通道
@@ -286,6 +257,9 @@ namespace ArrayDisplay.Net {
             }
 
             set {
+                if (value == dacChannel) {
+                    return;
+                }
                 this.delayChannel = value;
                 this.OnPropertyChanged();
             }
@@ -301,6 +275,9 @@ namespace ArrayDisplay.Net {
             }
 
             set {
+                if (value != delayTime) {
+                    return;
+                }
                 this.delayTime = value;
                 this.OnPropertyChanged();
             }
@@ -316,6 +293,9 @@ namespace ArrayDisplay.Net {
             }
 
             set {
+                if (workChannel != value) {
+                    return;
+                }
                 this.workChannel = value;
                 this.OnPropertyChanged();
             }
@@ -327,11 +307,14 @@ namespace ArrayDisplay.Net {
         /// </summary>
         public int DacLenth {
             get {
-                return this.daclen;
+                return this.dacLen;
             }
 
             set {
-                this.daclen = value;
+                if (dacLen != value) {
+                    return;
+                }
+                this.dacLen = value;
                 this.OnPropertyChanged();
             }
         }
@@ -346,6 +329,9 @@ namespace ArrayDisplay.Net {
             }
 
             set {
+                if (dacChannel != value) {
+                    return;
+                }
                 this.dacChannel = value;
                 this.OnPropertyChanged();
             }
@@ -361,6 +347,9 @@ namespace ArrayDisplay.Net {
             }
 
             set {
+                if (origFrams != value) {
+                    return;
+                }
                 this.origFrams = value;
                 this.OnPropertyChanged();
             }
@@ -376,7 +365,11 @@ namespace ArrayDisplay.Net {
             }
 
             set {
+                if (origChannel != value) {
+                    return;
+                }
                 this.origChannel = value;
+                this.OnPropertyChanged();
             }
         }
 
@@ -394,6 +387,63 @@ namespace ArrayDisplay.Net {
             }
         }
 
+        /// <summary>
+        /// Gets or sets the save packs.
+        /// </summary>
+        public int WorkSaveTime {
+            get {
+                return workSaveTime;
+            }
+            set {
+                workSaveTime = value;
+            }
+        }
+
         #endregion
+
+        #endregion       
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SystemInfo"/> class.
+        /// </summary>
+        public SystemInfo() {
+            this.mcId = string.Empty;
+            this.mcMac = string.Empty;
+            this.mcType = string.Empty;
+            this.pulseDelay = -1;
+            this.pulsePeriod = -1;
+            this.pulseWidth = -1;
+            this.adcNum = 1;
+
+            this.adcOffset = string.Empty;
+            this.delayChannel = 1;
+            this.delayTime = 1;
+
+            this.dacLen = 3000;
+            this.dacChannel = 2;
+            this.origFrams = 200;
+            this.origChannel = 1;
+            this.origTdiv = 1;
+            workChannel = 1;
+            workSaveTime = 3;
+        }
+
+        /// <summary>
+        /// The property changed.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// The on property changed.
+        /// </summary>
+        /// <param name="propertyName">
+        /// The property name.
+        /// </param>
+        [NotifyPropertyChangedInvocator]
+        void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+            PropertyChangedEventHandler onPropertyChanged = this.PropertyChanged;
+            if (onPropertyChanged != null) {
+                onPropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        } 
     }
 }

@@ -1,40 +1,54 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using ArrayDisplay.Net;
+﻿namespace ArrayDisplay.DiscFile {
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
 
-namespace ArrayDisplay.DiscFile {
+    using ArrayDisplay.Net;
+    using ArrayDisplay.UI;
+
+    /// <summary>
+    /// Save wave data type.
+    /// </summary>
     public enum WaveData {
         WorkData,
         Origdata
     }
 
+    /// <summary>
+    /// Save Stream byte to disk
+    /// </summary>
     public class DataFile : IDisposable {
         #region Field
 
         readonly string filepath;
         readonly int origLength;
-        readonly ConcurrentQueue<byte[]> origRcvQueue;
+        ConcurrentQueue<byte[]> origRcvQueue;
         readonly AutoResetEvent origResetEvent;
-        readonly ConcurrentQueue<byte[]> workRcvQueue;
+        ConcurrentQueue<byte[]> workRcvQueue;
         readonly AutoResetEvent workResetEvent;
 
         string filename;
 
         Thread oriThread;
-        readonly int workLength;
+        int workLength;
         Thread workThread;
 
+       
         #endregion
 
         #region Property
 
         public bool IsStartFlag {
+            get;
+            set;
+        }
+
+        public bool IsOfflineFlag {
             get;
             set;
         }
@@ -50,13 +64,14 @@ namespace ArrayDisplay.DiscFile {
             workResetEvent = new AutoResetEvent(false);
             RelativeDirectory rd = new RelativeDirectory();
             origLength = ConstUdpArg.SAVE_ORIGPACK;
-            workLength = ConstUdpArg.SAVE_WORKPACK;
+            workLength = 5 * 3;//三秒左右数据
             string inipath = Environment.CurrentDirectory + "\\wavedata";
             if (!Directory.Exists(inipath)) {
                 Directory.CreateDirectory(inipath);
             }
             filepath = inipath + "\\";
             IsStartFlag = false;
+            IsOfflineFlag = false;
         }
 
         /// <summary>
@@ -96,6 +111,9 @@ namespace ArrayDisplay.DiscFile {
             if (workThread != null && workThread.IsAlive) {
                 workThread.Abort();
             }
+
+            UdpWaveData.WorkSaveDataEventHandler -= WriteWorkData;
+            UdpWaveData.OrigSaveDataEventHandler -= WriteOrigData;
         }
 
         #region orig相关
@@ -168,9 +186,13 @@ namespace ArrayDisplay.DiscFile {
         /// <param name="sender"></param>
         /// <param name="data"></param>
         void WriteOrigData(object sender, byte[] data) {
-            origRcvQueue.Enqueue(data);
+            
             if (!IsStartFlag) {
                 return;
+            }
+
+            if (!IsOfflineFlag) {
+                origRcvQueue.Enqueue(data);
             }
             string str = SetNowTimeStr(WaveData.Origdata);
             filename = filepath + str;
@@ -300,6 +322,7 @@ namespace ArrayDisplay.DiscFile {
                         }
                     }
                     catch(Exception e) {
+
                         Console.WriteLine(e);
                         throw;
                     }
@@ -312,7 +335,7 @@ namespace ArrayDisplay.DiscFile {
                     using(FileStream fsOrig = new FileStream(filename, FileMode.Append, FileAccess.Write)) {
                         using(BinaryWriter brWork = new BinaryWriter(fsOrig)) {
                             byte[] temp;
-                            for(int i = 0; i <= workRcvQueue.Count; i++) {
+                            for(int i = 0; i <= origLength; i++) {
                                 workRcvQueue.TryDequeue(out temp);
                                 if (temp != null) {
                                     brWork.Write(temp);
@@ -343,18 +366,20 @@ namespace ArrayDisplay.DiscFile {
         /// <param name="sender"></param>
         /// <param name="data"></param>
         void WriteWorkData(object sender, byte[] data) {
-            workRcvQueue.Enqueue(data);
             if (!IsStartFlag) {
                 return;
             }
+            if (!IsOfflineFlag) {
+                workRcvQueue.Enqueue(data);
+            }
             string str = SetNowTimeStr(WaveData.WorkData);
             filename = filepath + str;
+            workLength = DisPlayWindow.Info.WorkSaveTime * 5;
             workResetEvent.Set();
         }
 
         #endregion
 
-   
 
         #endregion
 
@@ -362,8 +387,11 @@ namespace ArrayDisplay.DiscFile {
 
         /// <inheritdoc />
         public void Dispose() {
+            workRcvQueue = new ConcurrentQueue<byte[]>();
+            IsOfflineFlag = true;
             origResetEvent.Dispose();
             workResetEvent.Dispose();
+            
         }
 
         #endregion

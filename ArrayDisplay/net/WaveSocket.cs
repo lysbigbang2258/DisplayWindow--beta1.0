@@ -87,7 +87,7 @@ namespace ArrayDisplay.Net {
         public void StartCaclBvalue(IPEndPoint ip, UdpCommandSocket udpCommandSocket) {
             try {
                 this.UCommandSocket = udpCommandSocket;
-                this.MSocket.ReceiveBufferSize = ConstUdpArg.ORIG_FRAME_LENGTH;
+                this.MSocket.ReceiveBufferSize = ConstUdpArg.ORIG_FRAME_LENGTH + 2;
                 this.MSocket.Bind(ip);
                 this.RcvThread = new Thread(this.RcvUdpdataToBvalue_ThreatStart) {IsBackground = true};
                 this.RcvResetEvent = new AutoResetEvent(false);
@@ -109,7 +109,7 @@ namespace ArrayDisplay.Net {
         {
             try {
                 this.UCommandSocket = udpCommandSocket;
-                this.MSocket.ReceiveBufferSize = ConstUdpArg.ORIG_FRAME_LENGTH;
+                this.MSocket.ReceiveBufferSize = ConstUdpArg.ORIG_FRAME_LENGTH + 2;
                 this.MSocket.Bind(ip);
                 this.RcvThread = new Thread(this.RcvUdpdataToPhase_ThreatStart) { IsBackground = true };
                 this.RcvResetEvent = new AutoResetEvent(false);

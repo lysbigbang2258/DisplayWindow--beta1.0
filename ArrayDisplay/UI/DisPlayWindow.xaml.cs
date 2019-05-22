@@ -265,7 +265,7 @@ namespace ArrayDisplay.UI {
             HMainWindow = this;
 
             Info = new SystemInfo();
-            dataFile = new DataFile();
+            
             udpCommandSocket = new UdpCommandSocket();
 
             if (!udpCommandSocket.Init()) {
@@ -331,6 +331,7 @@ namespace ArrayDisplay.UI {
 
             // 正常工作
             tb_workChannel.SetBinding(TextBox.TextProperty, new Binding("WorkChannel") { Source = Info, Mode = BindingMode.TwoWay });
+            tb_workSaveTime.SetBinding(TextBox.TextProperty, new Binding("WorkSaveTime") { Source = Info,Mode = BindingMode.TwoWay });
         }
 
         /// <summary>
@@ -756,6 +757,7 @@ namespace ArrayDisplay.UI {
 
             IsorigSaveFlag = !IsorigSaveFlag;
             if (IsorigSaveFlag) {
+                dataFile = new DataFile();
                 btn_origsave.Content = "正在保存";
                 dataFile.IsStartFlag = true;
                 dataFile.EnableOrigSaveFile();
@@ -764,6 +766,7 @@ namespace ArrayDisplay.UI {
                 btn_origsave.Content = "保存数据";
                 dataFile.IsStartFlag = false;
                 dataFile.DisableSaveFile();
+                dataFile.Dispose();
             }
         }
 
@@ -1026,14 +1029,10 @@ namespace ArrayDisplay.UI {
         /// The e.
         /// </param>
         void SendConfig_OnClick(object sender, RoutedEventArgs e) {
-            try {
-                SendBvalue();
-                SendPhase();
-            }
-            catch(Exception exception) {
-                Console.WriteLine(exception);
-                throw;
-            }
+
+            SendBvalue();
+            SendPhase();
+            
             MessageBox.Show("发送成功");
         }
 
@@ -1055,11 +1054,18 @@ namespace ArrayDisplay.UI {
                 MessageBox.Show("请先计算B值并保存");
                 return;
             }
-            var bfloats = ReadDiscValue(filepath, 2);
-            WaveSocket socket = new WaveSocket();
-            var result = socket.GetSendBvalues(bfloats);
 
-            udpCommandSocket.WriteBvalue(result);
+            try {
+                var bfloats = ReadDiscValue(filepath, 2);
+                WaveSocket socket = new WaveSocket();
+                var result = socket.GetSendBvalues(bfloats);
+                udpCommandSocket.WriteBvalue(result);
+            }
+            catch(Exception e) {
+                Console.WriteLine(e);
+                throw;
+            }
+           
         }
 
         /// <summary>
@@ -1081,10 +1087,16 @@ namespace ArrayDisplay.UI {
                 MessageBox.Show("请先计算初始相位并保存");
                 return;
             }
-            var bfloats = ReadDiscValue(filepath, 1);
-            WaveSocket socket = new WaveSocket();
-            var result = socket.GetSendPhases(bfloats);
-            udpCommandSocket.WritePhase(result);
+            try {
+                var bfloats = ReadDiscValue(filepath, 1);
+                WaveSocket socket = new WaveSocket();
+                var result = socket.GetSendPhases(bfloats);
+                udpCommandSocket.WritePhase(result);
+            }
+            catch(Exception e) {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         /// <summary>
@@ -1285,15 +1297,19 @@ namespace ArrayDisplay.UI {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void SaveWorkData_OnClick(object sender, RoutedEventArgs e) {
-            if (NormWaveData == null || !NormWaveData.IsRcving) {
-                MessageBox.Show("请采集原始波形数据");
-                btn_workSave.Content = "保存数据";
+
+            if (NormWaveData == null) {
+                if ((string)btn_workSave.Content == "保存数据") {
+                    MessageBox.Show("请采集原始波形数据");
+                }
+                btn_workSave.Content = "保存数据"; 
                 return;
             }
 
             IsworkSaveFlag = !IsworkSaveFlag;
             if (IsworkSaveFlag) {
-                btn_workSave.Content = "开始保存";
+                dataFile = new DataFile();
+                btn_workSave.Content = "关闭保存";
                 dataFile.EnableWorkSaveFile();
                 dataFile.IsStartFlag = true;
             }
@@ -1301,6 +1317,7 @@ namespace ArrayDisplay.UI {
                 btn_workSave.Content = "保存数据";
                 dataFile.DisableSaveFile();
                 dataFile.IsStartFlag = true;
+                dataFile.Dispose();
             }
         }
 
@@ -1317,6 +1334,7 @@ namespace ArrayDisplay.UI {
                     NormWaveData.StartReceiveData(ConstUdpArg.Src_NormWaveIp);
                     btn_workstart.Content = "停止";
                     NormWaveData.StartRcvEvent.Set();
+                    
                 }
                 else if (NormWaveData != null || NormWaveData.IsBuilded) {
                     InitGraphState();
@@ -1435,16 +1453,6 @@ namespace ArrayDisplay.UI {
             var graphdata = new float[len];
 
             Array.Copy(e, 0, graphdata, 0, len);
-
-            for(int i = 0; i < len; i++) {
-                if (Math.Abs(graphdata[i]) < 0.00001F) {
-                    graphdata[i] = 0;
-                }
-                else {
-                    // graphdata[i] = 20 + 20 * (float)Math.Log10(Math.Abs(graphdata[i]));
-                    graphdata[i] = 50 * graphdata[i];
-                }
-            }
 
             var xnums = new int[len];
             var dataPoints1 = new Point[len];

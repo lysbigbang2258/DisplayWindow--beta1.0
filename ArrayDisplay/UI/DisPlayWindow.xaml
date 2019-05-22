@@ -945,6 +945,29 @@
                                                     Background="#FF66EE66"
                                                     Click="WorkDataStart_OnClick"
                                                     Content="启动" />
+                                                <Label
+                                                    Width="120"
+                                                    Margin="0,0,0,0"
+                                                    HorizontalContentAlignment="Center"
+                                                    VerticalContentAlignment="Center"
+                                                    Content="分包大小" />
+                                                <TextBox
+                                                    x:Name="tb_workSaveTime"
+                                                    Width="98"
+                                                    Height="32"
+                                                    Margin="0,0,0,0"
+                                                    HorizontalAlignment="Right"
+                                                    VerticalAlignment="Center"
+                                                    VerticalContentAlignment="Center"
+                                                    KeyUp="Tb_workChNum_OnKeyUp"
+                                                    Text="1"
+                                                    TextAlignment="Center" />
+                                                <Label
+                                                    Width="40"
+                                                    Margin="0,0,0,0"
+                                                    HorizontalContentAlignment="Center"
+                                                    VerticalContentAlignment="Center"
+                                                    Content="s" />
                                                 <Button
                                                     x:Name="btn_workSave"
                                                     Width="100"
@@ -1035,7 +1058,7 @@
                                                     Range="0,500" />
                                                 <ni:AxisDouble
                                                     x:Name="yScale"
-                                                    Adjuster="FitVisibleLoosely "
+                                                    Adjuster="None "
                                                     MinorDivisions="{x:Null}"
                                                     Orientation="Vertical"
                                                     Range="-2,2">
@@ -1153,7 +1176,7 @@
                                                 Label="Ampliton"
                                                 MinorDivisions="{x:Null}"
                                                 Orientation="Vertical"
-                                                Range="0,50" />
+                                                Range="0,2" />
                                         </ni:Graph.Axes>
                                         <ni:Graph.DefaultPlotRenderers>
                                             <ni:BarPlotRenderer
