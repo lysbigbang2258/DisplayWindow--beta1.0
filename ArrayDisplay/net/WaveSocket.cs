@@ -366,6 +366,7 @@ namespace ArrayDisplay.Net {
                     list1.Add((float)tmp1);
                     list1.Add((float)tmp2);
                 }
+                oneLists.Add(list1);
             }
 
             for (int i = 0; i < oneLists.Count; i++)

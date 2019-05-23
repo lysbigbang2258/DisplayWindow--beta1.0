@@ -434,7 +434,6 @@ namespace ArrayDisplay.Net {
                              this.WriteData(bytelist.ToArray(), datalistBytes[i]);
                              
                              bytelist.Clear();
-
                          }
                      });
 
