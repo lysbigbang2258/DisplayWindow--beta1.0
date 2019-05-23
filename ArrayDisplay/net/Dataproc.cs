@@ -613,7 +613,7 @@ namespace ArrayDisplay.Net {
         void ThreadFreqWaveStart() {
             while(true) {
                 FreqWaveEvent.WaitOne();
-                var dataPoints = NewFFT.Start(WorkWavefdatas, 10000); // 用8192个点
+                var dataPoints = NewFFT.Start(WorkWavefdatas,4096); // 用4096个点
 
                 if (FrapPointGraphEventHandler != null) {
                     FrapPointGraphEventHandler.Invoke(null, dataPoints);

@@ -374,7 +374,7 @@
             }
             string str = SetNowTimeStr(WaveData.WorkData);
             filename = filepath + str;
-            workLength = DisPlayWindow.Info.WorkSaveTime * 5;
+            workLength = DisPlayWindow.Info.WorkSaveTime * ConstUdpArg.WORK_SAVE_PACK_PER;
             workResetEvent.Set();
         }
 
