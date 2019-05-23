@@ -4,11 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArrayDisplay", "ArrayDisplay\ArrayDisplay.csproj", "{77C14530-C873-4836-B79C-B4F8350266D7}"
-	ProjectSection(ProjectDependencies) = postProject
-		{13FF71DB-6BB2-4A25-A862-BA8AB2D0B97D} = {13FF71DB-6BB2-4A25-A862-BA8AB2D0B97D}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserControl", "ImageButtonControl\UserControl.csproj", "{13FF71DB-6BB2-4A25-A862-BA8AB2D0B97D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,14 +20,6 @@ Global
 		{77C14530-C873-4836-B79C-B4F8350266D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77C14530-C873-4836-B79C-B4F8350266D7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{77C14530-C873-4836-B79C-B4F8350266D7}.Release|x64.ActiveCfg = Release|Any CPU
-		{13FF71DB-6BB2-4A25-A862-BA8AB2D0B97D}.Debug|Any CPU.ActiveCfg = Release|Any CPU
-		{13FF71DB-6BB2-4A25-A862-BA8AB2D0B97D}.Debug|Any CPU.Build.0 = Release|Any CPU
-		{13FF71DB-6BB2-4A25-A862-BA8AB2D0B97D}.Debug|x64.ActiveCfg = Debug|x64
-		{13FF71DB-6BB2-4A25-A862-BA8AB2D0B97D}.Debug|x64.Build.0 = Debug|x64
-		{13FF71DB-6BB2-4A25-A862-BA8AB2D0B97D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{13FF71DB-6BB2-4A25-A862-BA8AB2D0B97D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{13FF71DB-6BB2-4A25-A862-BA8AB2D0B97D}.Release|x64.ActiveCfg = Release|x64
-		{13FF71DB-6BB2-4A25-A862-BA8AB2D0B97D}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

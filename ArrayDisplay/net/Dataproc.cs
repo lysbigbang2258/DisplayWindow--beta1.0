@@ -307,10 +307,6 @@ namespace ArrayDisplay.Net {
         ///     The release unmanaged resources.
         /// </summary>
         void ReleaseUnmanagedResources() {
-            WorkWaveBytes = null;
-            OrigWaveBytes = null;
-            OrigWaveFloats = null;
-
         }
 
         /// <summary>

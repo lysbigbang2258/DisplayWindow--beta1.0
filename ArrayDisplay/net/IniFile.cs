@@ -5,7 +5,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using ArrayDisplay.DataFile;
 using ArrayDisplay.DiscFile;
 
 namespace ArrayDisplay.Net {

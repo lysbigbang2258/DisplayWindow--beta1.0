@@ -275,7 +275,7 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (value != delayTime) {
+                if (value == delayTime) {
                     return;
                 }
                 this.delayTime = value;
@@ -293,7 +293,7 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (workChannel != value) {
+                if (workChannel == value) {
                     return;
                 }
                 this.workChannel = value;
@@ -311,7 +311,7 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (dacLen != value) {
+                if (dacLen == value) {
                     return;
                 }
                 this.dacLen = value;
@@ -329,7 +329,7 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (dacChannel != value) {
+                if (dacChannel == value) {
                     return;
                 }
                 this.dacChannel = value;
@@ -347,7 +347,7 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (origFrams != value) {
+                if (origFrams == value) {
                     return;
                 }
                 this.origFrams = value;
@@ -365,7 +365,7 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (origChannel != value) {
+                if (origChannel == value) {
                     return;
                 }
                 this.origChannel = value;
@@ -383,7 +383,11 @@ namespace ArrayDisplay.Net {
             }
 
             set {
+                if (origTdiv == value) {
+                    return;
+                }
                 this.origTdiv = value;
+                this.OnPropertyChanged();
             }
         }
 
@@ -395,7 +399,11 @@ namespace ArrayDisplay.Net {
                 return workSaveTime;
             }
             set {
+                if (workSaveTime == value) {
+                    return;
+                }
                 workSaveTime = value;
+                OnPropertyChanged();
             }
         }
 

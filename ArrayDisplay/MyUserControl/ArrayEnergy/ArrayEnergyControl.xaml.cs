@@ -8,15 +8,16 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using ArrayDisplay.DataFile;
 using Timer = System.Timers.Timer;
 
 namespace ArrayDisplay.MyUserControl.ArrayEnergy {
+    using ArrayDisplay.Net;
+
     /// <summary>
     ///     ArrayEnergyControl.xaml 的交互逻辑
     /// </summary>
     public partial class ArrayEnergyControl:IDisposable {
-        public static int array_Num = DefineConst.ARRAY_NUM; //初始探头个数
+        public static int array_Num = ConstUdpArg.ARRAY_NUM; //初始探头个数
         public static int max_PixLen ; //最大像素长度
         public static int min_PixLen ; //最小像素长度
         public static int deafult_PixLen ; // 默认像素长度
