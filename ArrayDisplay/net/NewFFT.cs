@@ -1,11 +1,12 @@
 ﻿// 2018071814:04
 
-using System;
-using System.Windows;
-using NationalInstruments;
-using NationalInstruments.Analysis.Dsp;
+namespace ArrayDisplay.Net {
+    using System;
+    using System.Windows;
 
-namespace ArrayDisplay.net {
+    using NationalInstruments;
+    using NationalInstruments.Analysis.Dsp;
+
     public static class NewFFT {
 
 

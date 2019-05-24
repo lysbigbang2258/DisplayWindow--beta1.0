@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace ArrayDisplay.net {
+namespace ArrayDisplay.Net {
     public class ConstUdpArg {
         #region IP与端口field
 
@@ -325,7 +325,7 @@ namespace ArrayDisplay.net {
         public static byte[] GetDelayTimeReadCommand(int idcNum) {
             var channel = new byte[DelayChannel_Read.Length];
             Array.Copy(DelayChannel_Read, 0, channel, 0, DelayChannel_Read.Length);
-            channel.SetValue((byte) (channel[5] + (idcNum - 1) * 2), 5);
+            channel.SetValue((byte) (channel[5] + (idcNum) * 2), 5);
             return channel;
         }
         /// <summary>读指令:DacChannel</summary>
@@ -466,25 +466,37 @@ namespace ArrayDisplay.net {
             59, 91, 123, 155, 187, 219, 251, 28, 60, 92, 124, 156, 188, 220, 252, 29, 61, 93, 125, 157, 189, 221, 253, 30, 62, 94, 126, 158, 190, 222,
             254, 31, 63, 95, 127, 159, 191, 223, 255, 32, 64, 96, 128, 160, 192, 224, 256
         };
+        public static int[] offsetArrayTwo = {
+            1,  9,  17, 25, 33, 41, 49, 57,
+            2,  10, 18, 26, 34, 42, 50, 58,
+            3,  11, 19, 27, 35, 43, 51, 59,
+            4,  12, 20, 28, 36, 44, 52, 60,
+            5,  13, 21, 29, 37, 45, 53, 61,
+            6,  14, 22, 30, 38, 46, 54, 62,
+            7,  15, 23, 31, 39, 47, 55, 63,
+            8,  16, 24, 32, 40, 48, 56, 64
+        };
         #endregion
 
 
         #region 常量定义
 
         //阵元数
-        public const int ARRAY_NUM = 256; //阵元数
+        public const int ARRAY_NUM = 64; //阵元数
         public const int ARRAY_USED = 64; //阵元数
         //Buffer设置
 //        public const int WORK_FRAME_NUMS = 31250; //正常工作波形同时显示帧数
-        public const int WORK_FRAME_NUMS = 1024*16; //正常工作波形同时显示帧数
-        public const int WORK_FRAME_LENGTH = 1024; // 正常工作波形帧长
+        public const int WORK_FRAME_NUMS = 5000; //正常工作波形同时显示帧数 50k采样率，取1/10秒
+
+        public const int WORK_SAVE_PACK_PER = 10;
+        public const int WORK_FRAME_LENGTH = 256; // 正常工作波形帧长
         //能量图像素长度
         public const int MAX_ENERGY_PIXELS_LENGTH = 70;
         public const int MIN_ENERGY_PIXELS_LENGTH = 0;
         public const int DEAFULT_ENERGY_PIXELS_LENGTH = 30;
 
         public const int ORIG_FRAME_NUMS = 200; //原始工作波形同时显示帧数
-        public const int ORIG_FRAME_LENGTH = 1282; //原始工作波形帧长
+        public const int ORIG_FRAME_LENGTH = 1280; //原始工作波形帧长
         public const int ORIG_DETECT_LENGTH = 64;  
         public const int ORIG_TIME_NUMS = 8;
         public const int ORIG_TIME_OLDNUMS= 32;
