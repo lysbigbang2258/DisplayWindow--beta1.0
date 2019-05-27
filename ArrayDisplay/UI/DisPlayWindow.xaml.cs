@@ -1583,7 +1583,7 @@ namespace ArrayDisplay.UI {
 
             Point maxPoint = new Point(0, 0);
             foreach(Point dPoint in e) {
-                if (maxPoint.Y < dPoint.Y) {
+                if ( Math.Abs(maxPoint.Y) < Math.Abs(dPoint.Y)) {
                     maxPoint = dPoint;
                 }
             }

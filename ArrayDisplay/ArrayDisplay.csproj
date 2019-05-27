@@ -33,7 +33,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -47,22 +47,22 @@
   <ItemGroup>
     <Reference Include="NationalInstruments.Analysis.Enterprise, Version=15.0.45.49153, Culture=neutral, PublicKeyToken=4febd62461bf11a4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\NI_DLL\NationalInstruments.Analysis.Enterprise.dll</HintPath>
+      <HintPath>dll\NationalInstruments.Analysis.Enterprise.dll</HintPath>
     </Reference>
     <Reference Include="NationalInstruments.Common, Version=17.5.40.49153, Culture=neutral, PublicKeyToken=dc6ad606294fc298, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\NI_DLL\NationalInstruments.Common.dll</HintPath>
+      <HintPath>dll\NationalInstruments.Common.dll</HintPath>
     </Reference>
     <Reference Include="NationalInstruments.Controls, Version=15.0.45.3898, Culture=neutral, PublicKeyToken=4febd62461bf11a4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\NI_DLL\NationalInstruments.Controls.dll</HintPath>
+      <HintPath>dll\NationalInstruments.Controls.dll</HintPath>
     </Reference>
     <Reference Include="NationalInstruments.Controls.Graphs, Version=15.0.45.3898, Culture=neutral, PublicKeyToken=4febd62461bf11a4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\NI_DLL\NationalInstruments.Controls.Graphs.dll</HintPath>
+      <HintPath>dll\NationalInstruments.Controls.Graphs.dll</HintPath>
     </Reference>
     <Reference Include="SlimDX">
-      <HintPath>dll\debug\SlimDX.dll</HintPath>
+      <HintPath>dll\SlimDX.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Windows.Forms" />
@@ -74,7 +74,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="WriteableBitmapEx.Wpf">
-      <HintPath>dll\debug\WriteableBitmapEx.Wpf.dll</HintPath>
+      <HintPath>dll\WriteableBitmapEx.Wpf.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
