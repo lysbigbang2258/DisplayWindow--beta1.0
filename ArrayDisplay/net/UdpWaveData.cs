@@ -96,8 +96,8 @@ namespace ArrayDisplay.Net {
         }
 
         void WorktInit() {
-            waveSocket.ReceiveBufferSize = ConstUdpArg.WORK_FRAME_LENGTH * ConstUdpArg.WORK_FRAME_NUMS * 2;
-            FrameNums = ConstUdpArg.WORK_FRAME_NUMS;
+            waveSocket.ReceiveBufferSize = ConstUdpArg.WORK_FRAME_LENGTH * DisPlayWindow.Info.WorkFramNums * 2;
+            FrameNums = DisPlayWindow.Info.WorkFramNums;
             rcvBuf = new byte[ConstUdpArg.WORK_FRAME_LENGTH * 2];
             RcvThread = new Thread(NormalThreadStart) { IsBackground = true, Priority = ThreadPriority.Highest, Name = "WorkWave" };
         }
@@ -300,7 +300,7 @@ namespace ArrayDisplay.Net {
             
             byte[][] resultBytes = new byte[ConstUdpArg.ARRAY_NUM][];
             for(int i = 0; i < resultBytes.Length; i++) {
-                resultBytes[i] = new byte[ConstUdpArg.WORK_FRAME_NUMS * 4];
+                resultBytes[i] = new byte[DisPlayWindow.Info.WorkFramNums * 4];
             }
             for(int index = 0; index < buf.Count; index++) {
                 var bytese = buf[index];
