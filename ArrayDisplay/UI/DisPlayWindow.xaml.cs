@@ -704,8 +704,7 @@ namespace ArrayDisplay.UI {
             try {
                 udpCommandSocket.SwitchWindow(ConstUdpArg.SwicthToOriginalWindow);
                 if (OrigWaveData == null) {
-                    OrigWaveData = new UdpWaveData();
-                    OrigWaveData.ExitFlag = false;
+                    OrigWaveData = new UdpWaveData { ExitFlag = false };
                     OrigWaveData.StartReceiveData(ConstUdpArg.Src_OrigWaveIp);
                     udpCommandSocket.WriteOrigChannel(OrigChannel);
                     udpCommandSocket.WriteOrigTDiv(OrigTiv);

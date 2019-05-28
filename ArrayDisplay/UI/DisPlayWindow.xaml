@@ -944,11 +944,7 @@
                                                     KeyUp="Tb_workFram_OnKeyUp"
                                                     Text="0"
                                                     TextAlignment="Center" />
-                                                <Label
-                                                    Width="100"
-                                                    Height="40"
-                                                    HorizontalContentAlignment="Center"
-                                                    Content="帧/10毫秒：" />
+
                                                 <Button
                                                     x:Name="btn_workstart"
                                                     Width="100"
