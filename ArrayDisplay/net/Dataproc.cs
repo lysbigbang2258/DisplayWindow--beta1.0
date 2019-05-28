@@ -433,7 +433,7 @@ namespace ArrayDisplay.Net {
             WorkWaveBytes = new byte[ArrayNums][];
             PlayWaveBytes = new byte[ArrayNums][];
 
-            int frameNum = ConstUdpArg.WORK_FRAME_NUMS * 4; // 工作数据帧数
+            int frameNum = DisPlayWindow.Info.WorkFramNums * 4; // 工作数据帧数
 
             for(int i = 0; i < ArrayNums; i++) {
                 WorkWaveBytes[i] = new byte[frameNum]; // 避免数据为null
@@ -558,7 +558,7 @@ namespace ArrayDisplay.Net {
                 WorkBytesEvent.WaitOne();
                 var r = new byte[4];
                 for(int i = 0; i < ConstUdpArg.ARRAY_NUM; i++) {
-                    for(int j = 0; j < ConstUdpArg.WORK_FRAME_NUMS; j++) {
+                    for(int j = 0; j < DisPlayWindow.Info.WorkFramNums; j++) {
                         r[0] = WorkWaveBytes[i][(j * 4) + 3];
                         r[1] = WorkWaveBytes[i][(j * 4) + 2];
                         r[2] = WorkWaveBytes[i][(j * 4) + 1];
@@ -607,12 +607,29 @@ namespace ArrayDisplay.Net {
         ///     The thread freq wave start.
         /// </summary>
         void ThreadFreqWaveStart() {
+            List<float[]> Fredatalist = new List<float[]>();
             while(true) {
                 FreqWaveEvent.WaitOne();
-                var dataPoints = NewFFT.Start(WorkWavefdatas,4096); // 用4096个点
-
-                if (FrapPointGraphEventHandler != null) {
-                    FrapPointGraphEventHandler.Invoke(null, dataPoints);
+                Fredatalist.Add(WorkWavefdatas);
+                if (Fredatalist.Count < 1) {
+                    continue;
+                }
+                else {
+                    List<float> list = new List<float>();
+                    foreach(float[] floats in Fredatalist) {
+                        list.AddRange(floats);
+                    }
+                    var dataPoints = NewFFT.Start(list.ToArray() ,8192*2*2); // 用前8192个点
+                    var tmpPoints = new Point[dataPoints.Length / 2];
+                    for(int i = 0; i < dataPoints.Length; i++) {
+                        if (i % 2 == 0) {
+                            tmpPoints[i/2] = dataPoints[i]; //Todo
+                        }
+                    }
+                    Fredatalist.Clear();
+                    if (FrapPointGraphEventHandler != null) {
+                        FrapPointGraphEventHandler.Invoke(null, tmpPoints);
+                    }
                 }
             }
         }

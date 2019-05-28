@@ -355,7 +355,7 @@
         ///     开启工作数据保存
         /// </summary>
         public void EnableWorkSaveFile() {
-            workThread = new Thread(Thread_WorkDataSave) {IsBackground = true};
+            workThread = new Thread(Thread_WorkDataSave) { IsBackground = true };
             workThread.Start();
             UdpWaveData.WorkSaveDataEventHandler += WriteWorkData;
         }

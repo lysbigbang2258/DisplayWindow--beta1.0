@@ -894,10 +894,7 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Grid Grid.Row="0" Background="#FFE5E5E5">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="220*" />
-                                    <ColumnDefinition Width="610*" />
-                                </Grid.ColumnDefinitions>
+
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
@@ -912,7 +909,7 @@
                                     </Grid.RowDefinitions>
                                     <Grid Row="0">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
                                         <DockPanel Grid.Column="0" VerticalAlignment="Center">
@@ -934,7 +931,24 @@
                                                     KeyUp="Tb_workChNum_OnKeyUp"
                                                     Text="1"
                                                     TextAlignment="Center" />
-
+                                                <Label
+                                                    Width="100"
+                                                    Height="40"
+                                                    HorizontalContentAlignment="Center"
+                                                    Content="帧数：" />
+                                                <TextBox
+                                                    x:Name="tb_workFram"
+                                                    Width="100"
+                                                    Height="32"
+                                                    FontFamily="18"
+                                                    KeyUp="Tb_workFram_OnKeyUp"
+                                                    Text="0"
+                                                    TextAlignment="Center" />
+                                                <Label
+                                                    Width="100"
+                                                    Height="40"
+                                                    HorizontalContentAlignment="Center"
+                                                    Content="帧/10毫秒：" />
                                                 <Button
                                                     x:Name="btn_workstart"
                                                     Width="100"
@@ -945,6 +959,21 @@
                                                     Background="#FF66EE66"
                                                     Click="WorkDataStart_OnClick"
                                                     Content="启动" />
+
+                                                <Button
+                                                    x:Name="btnPauseWorkGraph"
+                                                    Width="100"
+                                                    Height="32"
+                                                    Margin="10,0,0,0"
+                                                    Click="BtnPauseWorkGraph_OnClick"
+                                                    Content="暂停波形" />
+                                                <Button
+                                                    Width="100"
+                                                    Height="32"
+                                                    Margin="15,0,0,0"
+                                                    VerticalContentAlignment="Center"
+                                                    Click="SendConfig_OnClick"
+                                                    Content="自动定标" />
                                                 <Label
                                                     Width="120"
                                                     Margin="0,0,0,0"
@@ -975,20 +1004,6 @@
                                                     Margin="10,0,0,0"
                                                     Click="SaveWorkData_OnClick"
                                                     Content="保存数据" />
-                                                <Button
-                                                    x:Name="btnPauseWorkGraph"
-                                                    Width="100"
-                                                    Height="32"
-                                                    Margin="10,0,0,0"
-                                                    Click="BtnPauseWorkGraph_OnClick"
-                                                    Content="暂停波形" />
-                                                <Button
-                                                    Width="100"
-                                                    Height="32"
-                                                    Margin="15,0,0,0"
-                                                    VerticalContentAlignment="Center"
-                                                    Click="SendConfig_OnClick"
-                                                    Content="自动定标" />
                                             </DockPanel>
 
                                         </DockPanel>
@@ -1055,7 +1070,7 @@
                                                     Adjuster="None"
                                                     MinorDivisions="{x:Null}"
                                                     Orientation="Horizontal"
-                                                    Range="0,500" />
+                                                    Range="0,31250" />
                                                 <ni:AxisDouble
                                                     x:Name="yScale"
                                                     Adjuster="None "

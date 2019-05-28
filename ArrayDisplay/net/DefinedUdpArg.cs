@@ -482,14 +482,15 @@ namespace ArrayDisplay.Net {
         #region 常量定义
 
         //阵元数
+
         public const int ARRAY_NUM = 64; //阵元数
         public const int ARRAY_USED = 64; //阵元数
         //Buffer设置
 //        public const int WORK_FRAME_NUMS = 31250; //正常工作波形同时显示帧数
-        public const int WORK_FRAME_NUMS = 5000; //正常工作波形同时显示帧数 50k采样率，取1/10秒
+        public const int WORK_FRAME_NUMS = 31250; //正常工作波形同时显示帧数 31.25k采样率，取1/10秒
 
         public const int WORK_SAVE_PACK_PER = 10;
-        public const int WORK_FRAME_LENGTH = 256; // 正常工作波形帧长
+        public const int WORK_FRAME_LENGTH = 256; // 正常工作波形帧长 64 * 4
         //能量图像素长度
         public const int MAX_ENERGY_PIXELS_LENGTH = 70;
         public const int MIN_ENERGY_PIXELS_LENGTH = 0;
