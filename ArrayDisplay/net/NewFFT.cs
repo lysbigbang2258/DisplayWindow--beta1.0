@@ -49,7 +49,7 @@ namespace ArrayDisplay.Net {
                 // Generating xwaveform with respect to which magnitude and phase will be plotted.
                 xwaveform[i] = deltaFreq * i;
 //                subsetOfMagnitudes[i] = magnitudes[i] * scalingFactor * Math.Sqrt(2.0); // Storing only half the magnitudes array.
-                subsetOfMagnitudes[i] = magnitudes[i] * scalingFactor; // Storing only half the magnitudes array.
+                subsetOfMagnitudes[i] = magnitudes[i] / waveform.Length; // Storing only half the magnitudes array.
                 subsetOfPhases[i] = phases[i]; // Storing only half of the phases array.
 
             }
@@ -61,7 +61,7 @@ namespace ArrayDisplay.Net {
                 }
                 else
                 {
-                    logMagnitudes[i] = 10 * Math.Log10(subsetOfMagnitudes[i]);
+                    logMagnitudes[i] = 20 * Math.Log10(subsetOfMagnitudes[i]);
                 }
                 resultPoints[i] = new Point(xwaveform[i], logMagnitudes[i]);
             }

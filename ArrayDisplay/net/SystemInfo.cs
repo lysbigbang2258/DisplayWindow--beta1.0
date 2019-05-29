@@ -285,9 +285,6 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (value == dacChannel) {
-                    return;
-                }
                 this.delayChannel = value;
                 this.OnPropertyChanged();
             }
@@ -303,9 +300,7 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (value == delayTime) {
-                    return;
-                }
+                
                 this.delayTime = value;
                 this.OnPropertyChanged();
             }
@@ -321,9 +316,7 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (workChannel == value) {
-                    return;
-                }
+               
                 this.workChannel = value;
                 this.OnPropertyChanged();
             }
@@ -339,9 +332,7 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (dacLen == value) {
-                    return;
-                }
+                
                 this.dacLen = value;
                 this.OnPropertyChanged();
             }
@@ -357,9 +348,7 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (dacChannel == value) {
-                    return;
-                }
+                
                 this.dacChannel = value;
                 this.OnPropertyChanged();
             }
@@ -375,9 +364,7 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (origFrams == value) {
-                    return;
-                }
+                
                 this.origFrams = value;
                 this.OnPropertyChanged();
             }
@@ -393,9 +380,7 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (origChannel == value) {
-                    return;
-                }
+                
                 this.origChannel = value;
                 this.OnPropertyChanged();
             }
@@ -411,9 +396,7 @@ namespace ArrayDisplay.Net {
             }
 
             set {
-                if (origTdiv == value) {
-                    return;
-                }
+                
                 this.origTdiv = value;
                 this.OnPropertyChanged();
             }
@@ -427,9 +410,7 @@ namespace ArrayDisplay.Net {
                 return workSaveTime;
             }
             set {
-                if (workSaveTime == value) {
-                    return;
-                }
+                
                 workSaveTime = value;
                 OnPropertyChanged();
             }
@@ -443,9 +424,7 @@ namespace ArrayDisplay.Net {
                 return workFramNums;
             }
             set {
-                if (workFramNums == value) {
-                    return;
-                }
+                
                 workFramNums = value;
                 OnPropertyChanged();
             }

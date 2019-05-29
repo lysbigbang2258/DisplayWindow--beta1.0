@@ -64,7 +64,7 @@
             workResetEvent = new AutoResetEvent(false);
             RelativeDirectory rd = new RelativeDirectory();
             origLength = ConstUdpArg.SAVE_ORIGPACK;
-            workLength = 5 * 3;//三秒左右数据
+            workLength = 10 * 3;//三秒左右数据
             string inipath = Environment.CurrentDirectory + "\\wavedata";
             if (!Directory.Exists(inipath)) {
                 Directory.CreateDirectory(inipath);
