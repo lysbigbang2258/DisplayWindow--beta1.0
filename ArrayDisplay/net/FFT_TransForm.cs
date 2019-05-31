@@ -6,6 +6,7 @@
 
 namespace ArrayDisplay.Net {
     using System;
+    using System.Windows;
 
     /// <summary>
     ///     The ff t_ trans form.
@@ -45,16 +46,21 @@ namespace ArrayDisplay.Net {
         /// </summary>
         /// <param name="source">输入数据（长度为2的幂整数倍）</param>
         /// <returns>输出数据 </returns>
-        public float[] FFT(float[] source) {
+        public Point[] FFT(float[] source) {
+            double[] xwaveform = new double[source.Length];
+           var resultPoints = new Point[source.Length];
             var com = this.Dit2_FFT(source);
             var result = new float[source.Length];
+
             for(int i = 0; i < source.Length; i++) {
                 result[i] = com[i].Modulus();
                 double temp = result[i];
                 temp = 20 * Math.Log10(temp / source.Length * 2); // 转化为db显示
                 result[i] = (float)temp;
+                resultPoints[i] = new Point(xwaveform[i], result[i]);
             }
-            return result;
+            
+            return resultPoints;
         }
 
         /// <summary>

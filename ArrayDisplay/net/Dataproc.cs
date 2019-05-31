@@ -573,7 +573,7 @@ namespace ArrayDisplay.Net {
                         float f = WorkWaveFloats[i][j] * ListenCoefficent;
                         short sh;
                         if (f > 32767) {
-                            sh = 32767;
+                            sh = 32767;   
                         }
                         else if (f <= -32767) {
                             sh = -32767;
@@ -611,7 +611,7 @@ namespace ArrayDisplay.Net {
             while(true) {
                 FreqWaveEvent.WaitOne();
                 Fredatalist.Add(WorkWavefdatas);
-                if (Fredatalist.Count < 1) {
+                if (Fredatalist.Count < 10) {
                     continue;
                 }
                 else {
@@ -619,16 +619,14 @@ namespace ArrayDisplay.Net {
                     foreach(float[] floats in Fredatalist) {
                         list.AddRange(floats);
                     }
-                    var dataPoints = NewFFT.Start(list.ToArray() ,8192*2*2); // 用前8192个点
-                    var tmpPoints = new Point[dataPoints.Length / 2];
-                    for(int i = 0; i < dataPoints.Length; i++) {
-                        if (i % 2 == 0) {
-                            tmpPoints[i/2] = dataPoints[i]; //Todo
-                        }
-                    }
+                    
+                    // var dataPoints = NewFFT.Start(list.ToArray() ,3130); // 用前8192个点
+                    
+                    var dataPoints = NewFFT.Start(list.ToArray(),3125); // 用前8192个点
+                    
                     Fredatalist.Clear();
                     if (FrapPointGraphEventHandler != null) {
-                        FrapPointGraphEventHandler.Invoke(null, tmpPoints);
+                        FrapPointGraphEventHandler.Invoke(null, dataPoints);
                     }
                 }
             }
