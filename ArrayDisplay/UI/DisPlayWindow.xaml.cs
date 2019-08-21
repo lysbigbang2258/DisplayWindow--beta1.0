@@ -561,7 +561,7 @@ namespace ArrayDisplay.UI {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void Tb_deleyTime_OnKeyUp(object sender, System.Windows.Input.KeyEventArgs e) {
+        void Tb_deleyTime_OnKeyUp(object sender, KeyEventArgs e) {
             TextBox tb = sender as TextBox;
             int num = 1;
             if (!int.TryParse(tb.Text, out num)) {

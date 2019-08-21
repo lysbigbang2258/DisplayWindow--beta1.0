@@ -49,7 +49,7 @@ namespace ArrayDisplay.Net {
         public Point[] FFT(float[] source) {
             double[] xwaveform = new double[source.Length];
            var resultPoints = new Point[source.Length];
-            var com = this.Dit2_FFT(source);
+            var com = Dit2_FFT(source);
             var result = new float[source.Length];
 
             for(int i = 0; i < source.Length; i++) {
@@ -71,7 +71,7 @@ namespace ArrayDisplay.Net {
         public Complex[] Dit2_FFT(float[] srcComplexs) {
             int len = srcComplexs.Length;
             var resigndata = new float[len];
-            resigndata = this.MySort(srcComplexs);
+            resigndata = MySort(srcComplexs);
             var com = new Complex[len];
             for(int i = 0; i < len; i++) {
                 com[i] = new Complex(resigndata[i]);

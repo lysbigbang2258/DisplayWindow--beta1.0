@@ -11,7 +11,7 @@ using System.Windows.Threading;
 using Timer = System.Timers.Timer;
 
 namespace ArrayDisplay.MyUserControl.ArrayEnergy {
-    using ArrayDisplay.Net;
+    using Net;
 
     /// <summary>
     ///     ArrayEnergyControl.xaml 的交互逻辑

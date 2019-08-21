@@ -11,7 +11,7 @@ namespace ArrayDisplay.Net {
     using System.Threading;
     using System.Windows;
 
-    using ArrayDisplay.UI;
+    using UI;
 
     /// <inheritdoc />
     /// <summary>

@@ -65,12 +65,12 @@ namespace ArrayDisplay.Net {
       }
       public void IniWriteValue(string section, string key, string val)
       {
-        WritePrivateProfileString(section, key, val, this.path);
+        WritePrivateProfileString(section, key, val, path);
       }
       public string IniReadValue(string section, string key)
       {
         StringBuilder temp = new StringBuilder(255);
-        int i = GetPrivateProfileString(section, key, null, temp, 255, this.path);
+        int i = GetPrivateProfileString(section, key, null, temp, 255, path);
         return temp.ToString();
       }
     }  

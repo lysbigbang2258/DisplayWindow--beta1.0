@@ -4,7 +4,7 @@ namespace ArrayDisplay.Net {
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
-    using ArrayDisplay.Annotations;
+    using Annotations;
 
     /// <summary>
     /// The system info.
@@ -102,23 +102,23 @@ namespace ArrayDisplay.Net {
         /// Initializes a new instance of the <see cref="SystemInfo"/> class.
         /// </summary>
         public SystemInfo() {
-            this.mcId = string.Empty;
-            this.mcMac = string.Empty;
-            this.mcType = string.Empty;
-            this.pulseDelay = -1;
-            this.pulsePeriod = -1;
-            this.pulseWidth = -1;
-            this.adcNum = 1;
+            mcId = string.Empty;
+            mcMac = string.Empty;
+            mcType = string.Empty;
+            pulseDelay = -1;
+            pulsePeriod = -1;
+            pulseWidth = -1;
+            adcNum = 1;
 
-            this.adcOffset = string.Empty;
-            this.delayChannel = 1;
-            this.delayTime = 1;
+            adcOffset = string.Empty;
+            delayChannel = 1;
+            delayTime = 1;
 
-            this.dacLen = 3000;
-            this.dacChannel = 2;
-            this.origFrams = 200;
-            this.origChannel = 1;
-            this.origTdiv = 1;
+            dacLen = 3000;
+            dacChannel = 2;
+            origFrams = 200;
+            origChannel = 1;
+            origTdiv = 1;
             workChannel = 1;
             workSaveTime = 3;
 
@@ -133,15 +133,15 @@ namespace ArrayDisplay.Net {
         /// </summary>
         public string McType {
             get {
-                return this.mcType;
+                return mcType;
             }
 
             set {
-                if (value == this.mcType) {
+                if (value == mcType) {
                     return;
                 }
-                this.mcType = value;
-                this.OnPropertyChanged();
+                mcType = value;
+                OnPropertyChanged();
             }
         }
 
@@ -151,15 +151,15 @@ namespace ArrayDisplay.Net {
         /// </summary>
         public string McId {
             get {
-                return this.mcId;
+                return mcId;
             }
 
             set {
-                if (value == this.mcId) {
+                if (value == mcId) {
                     return;
                 }
-                this.mcId = value;
-                this.OnPropertyChanged();
+                mcId = value;
+                OnPropertyChanged();
             }
         }
 
@@ -169,15 +169,15 @@ namespace ArrayDisplay.Net {
         /// </summary>
         public string McMac {
             get {
-                return this.mcMac;
+                return mcMac;
             }
 
             set {
-                if (value == this.mcMac) {
+                if (value == mcMac) {
                     return;
                 }
-                this.mcMac = value;
-                this.OnPropertyChanged();
+                mcMac = value;
+                OnPropertyChanged();
             }
         }
 
@@ -187,15 +187,15 @@ namespace ArrayDisplay.Net {
         /// </summary>
         public string AdcOffset {
             get {
-                return this.adcOffset;
+                return adcOffset;
             }
 
             set {
-                if (value == this.adcOffset) {
+                if (value == adcOffset) {
                     return;
                 }
-                this.adcOffset = value;
-                this.OnPropertyChanged();
+                adcOffset = value;
+                OnPropertyChanged();
             }
         }
 
@@ -205,15 +205,15 @@ namespace ArrayDisplay.Net {
         /// </summary>
         public int AdcNum {
             get {
-                return this.adcNum;
+                return adcNum;
             }
 
             set {
-                if (value == this.adcNum) {
+                if (value == adcNum) {
                     return;
                 }
-                this.adcNum = value;
-                this.OnPropertyChanged();
+                adcNum = value;
+                OnPropertyChanged();
             }
         }
 
@@ -223,15 +223,15 @@ namespace ArrayDisplay.Net {
         /// </summary>
         public int PulsePeriod {
             get {
-                return this.pulsePeriod;
+                return pulsePeriod;
             }
 
             set {
-                if (value == this.pulsePeriod) {
+                if (value == pulsePeriod) {
                     return;
                 }
-                this.pulsePeriod = value;
-                this.OnPropertyChanged();
+                pulsePeriod = value;
+                OnPropertyChanged();
             }
         }
 
@@ -241,15 +241,15 @@ namespace ArrayDisplay.Net {
         /// </summary>
         public int PulseDelay {
             get {
-                return this.pulseDelay;
+                return pulseDelay;
             }
 
             set {
-                if (value == this.pulseDelay) {
+                if (value == pulseDelay) {
                     return;
                 }
-                this.pulseDelay = value;
-                this.OnPropertyChanged();
+                pulseDelay = value;
+                OnPropertyChanged();
             }
         }
 
@@ -259,15 +259,15 @@ namespace ArrayDisplay.Net {
         /// </summary>
         public int PulseWidth {
             get {
-                return this.pulseWidth;
+                return pulseWidth;
             }
 
             set {
-                if (value == this.pulseWidth) {
+                if (value == pulseWidth) {
                     return;
                 }
-                this.pulseWidth = value;
-                this.OnPropertyChanged();
+                pulseWidth = value;
+                OnPropertyChanged();
             }
         }
 
@@ -281,12 +281,12 @@ namespace ArrayDisplay.Net {
         /// </summary>
         public int DelayChannel {
             get {
-                return this.delayChannel;
+                return delayChannel;
             }
 
             set {
-                this.delayChannel = value;
-                this.OnPropertyChanged();
+                delayChannel = value;
+                OnPropertyChanged();
             }
         }
 
@@ -296,13 +296,13 @@ namespace ArrayDisplay.Net {
         /// </summary>
         public int DelayTime {
             get {
-                return this.delayTime;
+                return delayTime;
             }
 
             set {
                 
-                this.delayTime = value;
-                this.OnPropertyChanged();
+                delayTime = value;
+                OnPropertyChanged();
             }
         }
 
@@ -312,13 +312,13 @@ namespace ArrayDisplay.Net {
         /// </summary>
         public int WorkChannel {
             get {
-                return this.workChannel;
+                return workChannel;
             }
 
             set {
                
-                this.workChannel = value;
-                this.OnPropertyChanged();
+                workChannel = value;
+                OnPropertyChanged();
             }
         }
 
@@ -328,13 +328,13 @@ namespace ArrayDisplay.Net {
         /// </summary>
         public int DacLenth {
             get {
-                return this.dacLen;
+                return dacLen;
             }
 
             set {
                 
-                this.dacLen = value;
-                this.OnPropertyChanged();
+                dacLen = value;
+                OnPropertyChanged();
             }
         }
 
@@ -344,13 +344,13 @@ namespace ArrayDisplay.Net {
         /// </summary>
         public int DacChannel {
             get {
-                return this.dacChannel;
+                return dacChannel;
             }
 
             set {
                 
-                this.dacChannel = value;
-                this.OnPropertyChanged();
+                dacChannel = value;
+                OnPropertyChanged();
             }
         }
 
@@ -360,13 +360,13 @@ namespace ArrayDisplay.Net {
         /// </summary>
         public int OrigFramNums {
             get {
-                return this.origFrams;
+                return origFrams;
             }
 
             set {
                 
-                this.origFrams = value;
-                this.OnPropertyChanged();
+                origFrams = value;
+                OnPropertyChanged();
             }
         }
 
@@ -376,13 +376,13 @@ namespace ArrayDisplay.Net {
         /// </summary>
         public int OrigChannel {
             get {
-                return this.origChannel;
+                return origChannel;
             }
 
             set {
                 
-                this.origChannel = value;
-                this.OnPropertyChanged();
+                origChannel = value;
+                OnPropertyChanged();
             }
         }
 
@@ -392,13 +392,13 @@ namespace ArrayDisplay.Net {
         /// </summary>
         public int OrigTdiv {
             get {
-                return this.origTdiv;
+                return origTdiv;
             }
 
             set {
                 
-                this.origTdiv = value;
-                this.OnPropertyChanged();
+                origTdiv = value;
+                OnPropertyChanged();
             }
         }
 
@@ -447,7 +447,7 @@ namespace ArrayDisplay.Net {
         /// </param>
         [NotifyPropertyChangedInvocator]
         void OnPropertyChanged([CallerMemberName] string propertyName = null) {
-            PropertyChangedEventHandler onPropertyChanged = this.PropertyChanged;
+            PropertyChangedEventHandler onPropertyChanged = PropertyChanged;
             if (onPropertyChanged != null) {
                 onPropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }

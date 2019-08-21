@@ -8,8 +8,8 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using ArrayDisplay.Net;
-    using ArrayDisplay.UI;
+    using Net;
+    using UI;
 
     /// <summary>
     /// Save wave data type.
