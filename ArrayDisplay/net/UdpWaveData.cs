@@ -7,7 +7,10 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ArrayDisplay.Net
 {
@@ -36,7 +39,11 @@ namespace ArrayDisplay.Net
 
         private static readonly LinkedList<Array> linkbuffer = new LinkedList<Array>(); // 缓存数据buff
 
+        private object lockobj = new object();
+
         public byte[][] Splikbytes;
+
+        private SemaphoreSlim semaphore;
 
         private readonly int[] delayChannelOffsets = new int[8];
 
@@ -48,6 +55,10 @@ namespace ArrayDisplay.Net
 
         private byte[] rcvBuf; // 接收数据缓存
 
+        List<byte[]> recTmpBytes = new List<byte[]>();
+        List<byte[]> recSendBytes = new List<byte[]>();
+        List<byte> saveBytes = new List<byte>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="UdpWaveData" /> class.
         /// </summary>
@@ -58,6 +69,7 @@ namespace ArrayDisplay.Net
                 waveSocket = new Socket(addressFamily: AddressFamily.InterNetwork, socketType: SocketType.Dgram, protocolType: ProtocolType.Udp);
                 StartRcvEvent = new AutoResetEvent(false);
                 IsStopRcved = false;
+                semaphore = new SemaphoreSlim(0,1);
             }
             catch (Exception e)
             {
@@ -303,8 +315,7 @@ namespace ArrayDisplay.Net
             IPEndPoint remote = new IPEndPoint(address: IPAddress.Any, port: 0);
             EndPoint senderRemote = remote;
             Console.WriteLine(@"启动UDP线程...");
-            var recBytes = new List<byte[]>();
-            var saveBytes = new List<byte>();
+            
             Task<bool> processTask = null;
 
             while (true)
@@ -345,7 +356,7 @@ namespace ArrayDisplay.Net
                         {
                             var rcvBytes = new byte[256];
                             Array.Copy(sourceArray: rcvBuf, destinationArray: rcvBytes, length: rcvBytes.Length);
-                            recBytes.Add(item: rcvBytes);
+                            recTmpBytes.Add(item: rcvBytes);
                             saveBytes.AddRange(collection: rcvBytes);
                         }
                     }
@@ -359,28 +370,58 @@ namespace ArrayDisplay.Net
                 Task.Run(
                     () =>
                     {
-                        if (recBytes.Count >= FrameNums)
+                        try
                         {
-                            var worktmp  = recBytes.ToArray();
-                            Splikbytes = PutWorkData(worktmp);
+                            if (recTmpBytes.Count < FrameNums)
+                            {
+                                return;
+                            }
 
-                            var savetmp = saveBytes.ToArray();
-                            WorkSaveDataEventHandler?.Invoke(null, savetmp);
+                            if (semaphore.CurrentCount < 1)
+                            {
+                                semaphore.Release();
+                            }
+                            try
+                            {
+                                semaphore.Wait();
+                                lock (lockobj)
+                                {
+                                    recSendBytes.AddRange(recTmpBytes.ToArray());
+                                    recTmpBytes.Clear();
+                                }
+                                
+                                Splikbytes = PutWorkData(recSendBytes.ToArray());
 
-                            saveBytes.Clear();
-                            recBytes.Clear();
+                                Console.WriteLine("splikbytes:" + Splikbytes.Length);
+                                var savetmp = saveBytes.ToArray();
+
+                                WorkSaveDataEventHandler?.Invoke(null, savetmp);
+                                if (Splikbytes != null)
+                                {
+                                    WorkDataEventHandler?.Invoke(null, e: Splikbytes);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                                throw;
+                            }
+                            finally
+                            {
+                                saveBytes.Clear();
+                                recSendBytes.Clear();
+                                Splikbytes = null;
+                            }
                         }
-
-                        if (Splikbytes == null)
+                        catch (Exception e)
                         {
-                            return;
+                            Console.WriteLine(e);
+                            throw;
                         }
-
-                        WorkDataEventHandler?.Invoke(null, e: Splikbytes);
-                        Splikbytes = null;
+                       
                     });
                 saveBytes.Clear();
-                recBytes.Clear();
+                recTmpBytes.Clear();
                 WaveDataproc.WorkBytesEvent.Set();
                 StartRcvEvent.Set();
             }
@@ -533,12 +574,29 @@ namespace ArrayDisplay.Net
             }
         }
 
+        public T Clone<T>(T RealObject) 
+ 
+        { 
+            using (Stream objectStream = new MemoryStream()) 
+            { 
+                //利用 System.Runtime.Serialization序列化与反序列化完成引用对象的复制
+                IFormatter formatter = new BinaryFormatter(); 
+                formatter.Serialize(objectStream, RealObject); 
+                objectStream.Seek(0, SeekOrigin.Begin); 
+                return (T)formatter.Deserialize(objectStream); 
+            } 
+        } 
+
         /// <summary>
         ///     将WorkWave数据导入Detect_Bytes
         /// </summary>
         /// <param name="buf">一帧数据，长度为256，每4位表示1个探头数据</param>
         private byte[][] PutWorkData(byte[][] buf)
         {
+            if (buf == null)
+            {
+                Console.WriteLine(1);
+            }
             
             if (!Equals(objA: Ip, objB: ConstUdpArg.Src_NormWaveIp))
             {
@@ -555,11 +613,9 @@ namespace ArrayDisplay.Net
             {
                 for (int index = 0; index < buf.Length; index++)
                 {
-                    byte[] bytese = buf[index];
-
-                    for (int i = 0; i < bytese.Length / 4; i++)
+                    for (int i = 0; i < buf[index].Length / 4; i++)
                     {
-                        Array.Copy(sourceArray: bytese, sourceIndex: i * 4, destinationArray: resultBytes[i], destinationIndex: index * 4, length: 4);
+                        Array.Copy(buf[index], i * 4, resultBytes[i], index * 4, length: 4);
                     }
                 }
             }
