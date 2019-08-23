@@ -7,6 +7,8 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Linq;
+
 namespace ArrayDisplay.Net
 {
     using System;
@@ -183,15 +185,14 @@ namespace ArrayDisplay.Net
                 {
                     try
                     {
-                    waveSocket.Shutdown(SocketShutdown.Both);
-                    Thread.Sleep(10);
+                        waveSocket.Shutdown(SocketShutdown.Both);
+                        Thread.Sleep(10);
                     }
                     catch (Exception e)
                     {
                     Console.WriteLine("Socket.Both");
                     throw;
                     }
-
 
                     try
                     {
@@ -201,7 +202,6 @@ namespace ArrayDisplay.Net
                     catch (Exception e)
                     {
                         Console.WriteLine("Socket Close");
-
                         Console.WriteLine(value: e);
                         throw;
                     }
@@ -270,6 +270,7 @@ namespace ArrayDisplay.Net
                     IsRcving = false;
                     break;
                 }
+
 
                 try
                 {
@@ -357,19 +358,27 @@ namespace ArrayDisplay.Net
 
                 Task.Run(
                     () =>
+                    {
+                        if (recBytes.Count >= FrameNums)
                         {
-                            WorkSaveDataEventHandler?.Invoke(null, saveBytes.ToArray());
+                            var worktmp  = recBytes.ToArray();
+                            Splikbytes = PutWorkData(worktmp);
 
-                            Splikbytes = PutWorkData(recBytes.ToArray());
-                            if (Splikbytes != null)
-                            {
-                                if (WorkDataEventHandler != null)
-                                {
-                                    WorkDataEventHandler(null, e: Splikbytes);
-                                    Splikbytes = null;
-                                }
-                            }
-                        });
+                            var savetmp = saveBytes.ToArray();
+                            WorkSaveDataEventHandler?.Invoke(null, savetmp);
+
+                            saveBytes.Clear();
+                            recBytes.Clear();
+                        }
+
+                        if (Splikbytes == null)
+                        {
+                            return;
+                        }
+
+                        WorkDataEventHandler?.Invoke(null, e: Splikbytes);
+                        Splikbytes = null;
+                    });
                 saveBytes.Clear();
                 recBytes.Clear();
                 WaveDataproc.WorkBytesEvent.Set();
@@ -530,6 +539,7 @@ namespace ArrayDisplay.Net
         /// <param name="buf">一帧数据，长度为256，每4位表示1个探头数据</param>
         private byte[][] PutWorkData(byte[][] buf)
         {
+            
             if (!Equals(objA: Ip, objB: ConstUdpArg.Src_NormWaveIp))
             {
                 return null;

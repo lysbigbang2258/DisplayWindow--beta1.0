@@ -38,7 +38,6 @@ namespace ArrayDisplay.Net {
             if (WorkWaveBytes != null) {
                 e.CopyTo(WorkWaveBytes, 0);
             }
-            Console.WriteLine();
         }
 
         /// <summary>

@@ -133,9 +133,10 @@ namespace ArrayDisplay.Net {
                 }
                 catch(Exception e) {
                     Console.WriteLine(e);
+                    throw;
                 }
-
-                Console.WriteLine("发送数据:{0}", BitConverter.ToString(sendbytes, 0, sendbytes.Length));
+               
+//                Console.WriteLine("发送数据:{0}", BitConverter.ToString(sendbytes, 0, sendbytes.Length));
 
                 var rcvUdpBuffer = new byte[18];
                 try {
@@ -147,6 +148,7 @@ namespace ArrayDisplay.Net {
                     }
                     catch(Exception e) {
                         Console.WriteLine(e);
+                        throw;
                     }
 
                     var flagBytes = new byte[8];
@@ -157,6 +159,7 @@ namespace ArrayDisplay.Net {
                 }
                 catch(Exception e) {
                     Console.WriteLine(e);
+                    throw;
                 }
             }
             catch(Exception e) {
@@ -761,7 +764,7 @@ namespace ArrayDisplay.Net {
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return null;
+                throw;
             }
 
             return rcvUdpBuffer;

@@ -293,6 +293,7 @@ namespace ArrayDisplay.UI {
                          }
                          catch(Exception exception) {
                              Console.WriteLine(exception);
+                             throw;
                          }
                      });
         }
@@ -525,6 +526,7 @@ namespace ArrayDisplay.UI {
                     }
                     catch(Exception exception) {
                         Console.WriteLine(exception);
+                        throw;
                     }
 
                     break;
@@ -581,6 +583,7 @@ namespace ArrayDisplay.UI {
                     }
                     catch(Exception exception) {
                         Console.WriteLine(exception);
+                        throw;
                     }
 
                     break;
@@ -825,6 +828,7 @@ namespace ArrayDisplay.UI {
                     }
                     catch(Exception exception) {
                         Console.WriteLine(exception);
+                        throw;
                     }
 
                     break;
@@ -883,6 +887,7 @@ namespace ArrayDisplay.UI {
                     }
                     catch(Exception exception) {
                         Console.WriteLine(exception);
+                        throw;
                     }
 
                     break;
@@ -987,9 +992,15 @@ namespace ArrayDisplay.UI {
                         Console.WriteLine(line);
                         MatchCollection matchCollection = Regex.Matches(line, pattern);
                         Match newMatch = matchCollection[valuedex];
-                        Console.WriteLine(newMatch.Value);
-                        float.TryParse(newMatch.Value, out decvalue);
-                        rerList.Add(decvalue);
+
+                        if (float.TryParse(newMatch.Value, out decvalue))
+                        {
+                            rerList.Add(decvalue);
+                        }
+                        else
+                        {
+                            rerList.Add(0f);
+                        }
                     }
                 }
             }
@@ -1371,6 +1382,7 @@ namespace ArrayDisplay.UI {
                     }
                     catch(Exception exception) {
                         Console.WriteLine(exception);
+                        throw;
                     }
 
                     break;
@@ -1422,6 +1434,7 @@ namespace ArrayDisplay.UI {
                     }
                     catch(Exception exception) {
                         Console.WriteLine(exception);
+                        throw;
                     }
 
                     break;
