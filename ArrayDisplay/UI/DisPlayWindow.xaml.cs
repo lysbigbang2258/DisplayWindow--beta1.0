@@ -342,18 +342,48 @@ namespace ArrayDisplay.UI {
                 OrigWaveData.ExitFlag = true;
                 OrigWaveData.Dispose();
                 OrigWaveData = null;
+
+                orige_graph.Dispatcher.InvokeAsync(() =>
+                {
+                    orige_graph.DataSource = 0;
+                    orige_graph.Refresh();
+                });
             }
 
             if (NormWaveData != null) {
                 NormWaveData.ExitFlag = true;
                 NormWaveData.Dispose();
                 NormWaveData = null;
+
+                graph_normalFrequency.Dispatcher.InvokeAsync(() =>
+                {
+                    graph_normalFrequency.DataSource = 0;
+                    graph_normalFrequency.Refresh();
+                });
+
+                graph_energyFirst.Dispatcher.InvokeAsync(() =>
+                {
+                    graph_energyFirst.DataSource = 0;
+                    graph_energyFirst.Refresh();
+                });
+
+                graph_normalTime.Dispatcher.InvokeAsync(() =>
+                {
+                    graph_normalTime.DataSource = 0;
+                    graph_normalTime.Refresh();
+                });
             }
 
             if (DelayWaveData != null) {
                 DelayWaveData.ExitFlag = true;
                 DelayWaveData.Dispose();
                 DelayWaveData = null;
+
+                delay_graph.Dispatcher.InvokeAsync(() =>
+                {
+                    delay_graph.DataSource = 0;
+                    delay_graph.Refresh();
+                });
             }
         }
 

@@ -20,7 +20,7 @@
         <ui:IndexConver x:Key="MyIndexConverter" />
     </Window.Resources>
     <Viewbox>
-        <Grid Name="rootGrid" Width="1280">
+        <Grid Name="rootGrid" Width="1280" Height="720">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
