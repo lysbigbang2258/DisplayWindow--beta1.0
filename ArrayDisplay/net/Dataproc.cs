@@ -170,7 +170,7 @@ namespace ArrayDisplay.Net {
         }
 
         /// <summary>
-        ///     Gets or sets the delay bytes event.
+        /// Gets or sets the delay bytes event.
         /// </summary>
         public AutoResetEvent DelayBytesEvent {
             get;
@@ -274,8 +274,8 @@ namespace ArrayDisplay.Net {
         }
 
         /// <summary>
-        ///     Gets or sets the orig wave floats.
-        ///     原始数据解调数据，横坐标表示探头序列，纵坐标表示数据组成
+        /// Gets or sets the orig wave floats.
+        /// 原始数据解调数据，横坐标表示探头序列，纵坐标表示数据组成
         /// </summary>
         float[][] OrigWaveFloats {
             get;

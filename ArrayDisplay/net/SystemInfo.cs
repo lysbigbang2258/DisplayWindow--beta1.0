@@ -1,10 +1,13 @@
 ﻿// 201812284:30 PM
+
+using ArrayDisplay.Annotations;
+
 namespace ArrayDisplay.Net {
     using System;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
-    using Annotations;
+   
 
     /// <summary>
     /// The system info.

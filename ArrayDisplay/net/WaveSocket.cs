@@ -195,12 +195,12 @@ namespace ArrayDisplay.Net {
             List<ArraySegment<byte>> buffer = new List<ArraySegment<byte>> {
                 new ArraySegment<byte>(new byte[1282]),
             };
+
             int ret;
-            Stopwatch stopwatch = new Stopwatch();
+
             while(true) {
                 RcvResetEvent.WaitOne();
                 try {
-                    stopwatch.Start();
                     ret = MSocket.Receive(buffer);
                     if (ret <= 0)
                     {
@@ -244,9 +244,6 @@ namespace ArrayDisplay.Net {
                     throw;
                 }
 
-                stopwatch.Stop();
-                Console.WriteLine("RCVTime:"+stopwatch.ElapsedMilliseconds);
-
                 RcvResetEvent.Reset();
             }
             
@@ -270,9 +267,8 @@ namespace ArrayDisplay.Net {
                     Console.WriteLine("发送时分{0}", i);
                     UCommandSocket.WriteOrigChannel(j);
                     Console.WriteLine("发送通道{0}", j);
-                    Thread.Sleep(15);
+                    Thread.Sleep(50);
                     RcvResetEvent.Set();
-                    Thread.Sleep(20);
                 }
             }
 

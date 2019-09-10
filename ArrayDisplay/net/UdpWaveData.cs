@@ -7,10 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ArrayDisplay.Net
 {
@@ -79,7 +76,7 @@ namespace ArrayDisplay.Net
         }
 
         /// <summary>
-        ///     Finalizes an instance of the <see cref="UdpWaveData" /> class.
+        /// Finalizes an instance of the <see cref="UdpWaveData" /> class.
         /// </summary>
         ~UdpWaveData()
         {
@@ -162,7 +159,7 @@ namespace ArrayDisplay.Net
                 IsBuilded = true;
                 if (Equals(objA: ip, objB: ConstUdpArg.Src_NormWaveIp))
                 {
-                    WorktInit();
+                    WorkInit();
                     WaveType = ConstUdpArg.WaveType.Normal;
                 }
                 else if (Equals(objA: ip, objB: ConstUdpArg.Src_OrigWaveIp))
@@ -574,19 +571,6 @@ namespace ArrayDisplay.Net
             }
         }
 
-        public T Clone<T>(T RealObject) 
- 
-        { 
-            using (Stream objectStream = new MemoryStream()) 
-            { 
-                //利用 System.Runtime.Serialization序列化与反序列化完成引用对象的复制
-                IFormatter formatter = new BinaryFormatter(); 
-                formatter.Serialize(objectStream, RealObject); 
-                objectStream.Seek(0, SeekOrigin.Begin); 
-                return (T)formatter.Deserialize(objectStream); 
-            } 
-        } 
-
         /// <summary>
         ///     将WorkWave数据导入Detect_Bytes
         /// </summary>
@@ -629,9 +613,9 @@ namespace ArrayDisplay.Net
         }
 
         /// <summary>
-        ///     The workt init.
+        ///     The work init.
         /// </summary>
-        private void WorktInit()
+        private void WorkInit()
         {
             waveSocket.ReceiveBufferSize = ConstUdpArg.WORK_FRAME_LENGTH * DisPlayWindow.Info.WorkFramNums * 2;
             FrameNums = DisPlayWindow.Info.WorkFramNums;
