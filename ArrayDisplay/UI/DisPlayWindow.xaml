@@ -20,7 +20,10 @@
         <ui:IndexConver x:Key="MyIndexConverter" />
     </Window.Resources>
     <Viewbox>
-        <Grid Name="rootGrid" Width="1280" Height="720">
+        <Grid
+            Name="rootGrid"
+            Width="1280"
+            Height="720">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -39,15 +42,14 @@
             <Grid
                 x:Name="waveGrid"
                 Grid.Row="1"
-                Height="640"
                 MinWidth="1260"
-                MinHeight="640"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center">
+                MinHeight="640">
                 <TabControl
                     x:Name="tabControl"
-                    Width="1260"
                     Height="{Binding ElementName=waveGrid, Path=Height}"
+                    MinWidth="1260"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
                     Background="#FFE5E5E5"
                     SelectionChanged="TabControl_OnSelectionChanged"
                     TabStripPlacement="Top">
@@ -56,7 +58,7 @@
                         Width="100"
                         Height="40"
                         Header="系统设置">
-                        <Grid x:Name="stateGrid">
+                        <Grid x:Name="stateGrid" MinHeight="600">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="360*" />
                                 <ColumnDefinition Width="540*" />
@@ -65,7 +67,7 @@
                             <StackPanel
                                 x:Name="systemstateGrid"
                                 Grid.Column="0"
-                                Height="650"
+                                HorizontalAlignment="Center"
                                 VerticalAlignment="Top"
                                 Background="#FFE5E5E5">
                                 <Label
@@ -141,8 +143,7 @@
                             <StackPanel
                                 x:Name="configGrid"
                                 Grid.Column="1"
-                                Height="650"
-                                HorizontalAlignment="Left"
+                                HorizontalAlignment="Center"
                                 VerticalAlignment="Top"
                                 Background="#FFE5E5E5">
 
@@ -411,7 +412,10 @@
                         Width="100"
                         Height="40"
                         Header="延时校准">
-                        <Grid x:Name="delaygrid" Background="#FFE5E5E5">
+                        <Grid
+                            x:Name="delaygrid"
+                            MinHeight="600"
+                            Background="#FFE5E5E5">
                             <StackPanel>
                                 <WrapPanel>
                                     <Label
@@ -530,7 +534,7 @@
                         Width="100"
                         Height="40"
                         Header="原始数据">
-                        <Grid Background="#FFE5E5E5">
+                        <Grid MinHeight="600" Background="#FFE5E5E5">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
@@ -733,7 +737,7 @@
                         Width="100"
                         Height="40"
                         Header="自动标定">
-                        <Grid Background="#FFE5E5E5">
+                        <Grid MinHeight="600" Background="#FFE5E5E5">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition />
@@ -810,7 +814,7 @@
                         Width="100"
                         Height="40"
                         Header="解调数据">
-                        <Grid Background="#FFE5E5E5">
+                        <Grid MinHeight="600" Background="#FFE5E5E5">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
