@@ -18,6 +18,8 @@ namespace ArrayDisplay.Net {
     ///     处理与分发网络数据
     /// </summary>
     public sealed class Dataproc : IDisposable {
+        private const float WORK_BASIC_DIV = 1048576.0f;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="Dataproc" /> class.
         /// </summary>
@@ -113,7 +115,7 @@ namespace ArrayDisplay.Net {
         }
 
         /// <summary>
-        ///     Gets or sets the work thread.
+        /// Gets or sets the work thread.
         /// </summary>
         public Thread WorkThread {
             get;
@@ -130,7 +132,7 @@ namespace ArrayDisplay.Net {
         }
 
         /// <summary>
-        ///     Gets or sets the orig thread.
+        /// Gets or sets the orig thread.
         /// </summary>
         public Thread OrigThread {
             get;
@@ -563,7 +565,7 @@ namespace ArrayDisplay.Net {
                         r[2] = WorkWaveBytes[i][(j * 4) + 1];
                         r[3] = WorkWaveBytes[i][j * 4];
                         int a = BitConverter.ToInt32(r, 0);
-                        float tmp = a / 1048576.0f;
+                        float tmp = a / WORK_BASIC_DIV;
 
                         // float tmp = a / 2.0f;
                         WorkWaveFloats[i][j] = tmp;

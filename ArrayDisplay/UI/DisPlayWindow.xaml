@@ -7,7 +7,7 @@
     xmlns:ni="http://schemas.ni.com/controls/2009/xaml/presentation"
     xmlns:ui="clr-namespace:ArrayDisplay.UI"
     Name="rootWindow"
-    Title="HDGX光电信号分析系统"
+    Title="光电信息通信解调系统"
     Width="1280"
     Height="720"
     Background="#FFE5E5E5"
@@ -34,9 +34,8 @@
                     Height="50"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
-                    FontSize="40">
-                    HDGX光电信号分析系统
-                </TextBlock>
+                    FontSize="40"
+                    Text="光电信息通信解调系统" />
             </Grid>
             <!--  图像面板  -->
             <Grid
@@ -44,8 +43,13 @@
                 Grid.Row="1"
                 MinWidth="1260"
                 MinHeight="640">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="59*" />
+                    <ColumnDefinition Width="69*" />
+                </Grid.ColumnDefinitions>
                 <TabControl
                     x:Name="tabControl"
+                    Grid.ColumnSpan="2"
                     Height="{Binding ElementName=waveGrid, Path=Height}"
                     MinWidth="1260"
                     HorizontalAlignment="Center"
@@ -415,6 +419,8 @@
                         <Grid
                             x:Name="delaygrid"
                             MinHeight="600"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
                             Background="#FFE5E5E5">
                             <StackPanel>
                                 <WrapPanel>
@@ -534,7 +540,11 @@
                         Width="100"
                         Height="40"
                         Header="原始数据">
-                        <Grid MinHeight="600" Background="#FFE5E5E5">
+                        <Grid
+                            MinHeight="600"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="#FFE5E5E5">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
@@ -699,7 +709,7 @@
                                 Grid.Row="1"
                                 Width="1000"
                                 Height="500"
-                                HorizontalAlignment="Left"
+                                HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Background="{x:Null}"
                                 Foreground="{x:Null}">
