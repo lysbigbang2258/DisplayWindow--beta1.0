@@ -43,13 +43,8 @@
                 Grid.Row="1"
                 MinWidth="1260"
                 MinHeight="640">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="59*" />
-                    <ColumnDefinition Width="69*" />
-                </Grid.ColumnDefinitions>
                 <TabControl
                     x:Name="tabControl"
-                    Grid.ColumnSpan="2"
                     Height="{Binding ElementName=waveGrid, Path=Height}"
                     MinWidth="1260"
                     HorizontalAlignment="Center"

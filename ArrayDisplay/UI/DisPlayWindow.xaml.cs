@@ -22,8 +22,9 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Forms;
 using System.Windows.Input;
+using ArrayDisplay.DataUtl;
 using ArrayDisplay.DiscFile;
-using ArrayDisplay.Net;
+using ArrayDisplay.NetUtl;
 using ArrayDisplay.sound;
 using NationalInstruments.Restricted;
 using Binding = System.Windows.Data.Binding;
@@ -49,7 +50,7 @@ namespace ArrayDisplay.UI
         // Udp_Data _capudp;
         // string _ip;
         // int _port;
-        private DataFile dataFile;
+        private DataUtl.DiscFile discFile;
 
         private Dataproc dataproc;
 
@@ -177,9 +178,9 @@ namespace ArrayDisplay.UI
         /// <inheritdoc />
         public void Dispose()
         {
-            if (dataFile != null)
+            if (discFile != null)
             {
-                dataFile.Dispose();
+                discFile.Dispose();
             }
 
             if (udpCommandSocket != null)
@@ -313,54 +314,50 @@ namespace ArrayDisplay.UI
 
             if (OrigWaveData != null)
             {
+                udpCommandSocket.SwitchWindow(ConstUdpArg.SwicthToStateWindow);
                 OrigWaveData.ExitFlag = true;
                 OrigWaveData.Dispose();
                 OrigWaveData = null;
-
-                orige_graph.Dispatcher.InvokeAsync(() =>
+                tabControl.Dispatcher.InvokeAsync(() =>
                 {
                     orige_graph.DataSource = 0;
                     orige_graph.Refresh();
+                    btn_origstart.Content = "启动";
                 });
             }
-
             if (NormWaveData != null)
             {
+                udpCommandSocket.SwitchWindow(ConstUdpArg.SwicthToStateWindow);
                 NormWaveData.ExitFlag = true;
                 NormWaveData.Dispose();
                 NormWaveData = null;
 
-                graph_normalFrequency.Dispatcher.InvokeAsync(() =>
+                tabControl.Dispatcher.InvokeAsync(() =>
                 {
                     graph_normalFrequency.DataSource = 0;
                     graph_normalFrequency.Refresh();
-                });
-
-                graph_energyFirst.Dispatcher.InvokeAsync(() =>
-                {
                     graph_energyFirst.DataSource = 0;
                     graph_energyFirst.Refresh();
-                });
-
-                graph_normalTime.Dispatcher.InvokeAsync(() =>
-                {
                     graph_normalTime.DataSource = 0;
                     graph_normalTime.Refresh();
+                    btn_workstart.Content = "启动";
                 });
             }
-
             if (DelayWaveData != null)
             {
+                udpCommandSocket.SwitchWindow(ConstUdpArg.SwicthToStateWindow);
                 DelayWaveData.ExitFlag = true;
                 DelayWaveData.Dispose();
                 DelayWaveData = null;
-
-                delay_graph.Dispatcher.InvokeAsync(() =>
+                tabControl.Dispatcher.InvokeAsync(() =>
                 {
                     delay_graph.DataSource = 0;
                     delay_graph.Refresh();
+                    btn_delaystart.Content = "启动";
                 });
+               
             }
+
         }
 
         /// <summary>
@@ -802,17 +799,17 @@ namespace ArrayDisplay.UI
             IsorigSaveFlag = !IsorigSaveFlag;
             if (IsorigSaveFlag)
             {
-                dataFile = new DataFile();
+                discFile = new DataUtl.DiscFile();
                 btn_origsave.Content = "正在保存";
-                dataFile.IsStartFlag = true;
-                dataFile.EnableOrigSaveFile();
+                discFile.IsStartFlag = true;
+                discFile.EnableOrigSaveFile();
             }
             else
             {
                 btn_origsave.Content = "保存数据";
-                dataFile.IsStartFlag = false;
-                dataFile.DisableSaveFile();
-                dataFile.Dispose();
+                discFile.IsStartFlag = false;
+                discFile.DisableSaveFile();
+                discFile.Dispose();
             }
         }
 
@@ -1407,7 +1404,7 @@ namespace ArrayDisplay.UI
                 }
 
                 IsOrigReplay = true;
-                if (!dataFile.ReplayData(fileList: fileList, cancellationToken: Cancellation))
+                if (!discFile.ReplayData(fileList: fileList, cancellationToken: Cancellation))
                 {
                     MessageBox.Show("回放数据失败");
                 }
@@ -1471,17 +1468,17 @@ namespace ArrayDisplay.UI
             IsworkSaveFlag = !IsworkSaveFlag;
             if (IsworkSaveFlag)
             {
-                dataFile = new DataFile();
+                discFile = new DataUtl.DiscFile();
                 btn_workSave.Content = "关闭保存";
-                dataFile.EnableWorkSaveFile();
-                dataFile.IsStartFlag = true;
+                discFile.EnableWorkSaveFile();
+                discFile.IsStartFlag = true;
             }
             else
             {
                 btn_workSave.Content = "保存数据";
-                dataFile.DisableSaveFile();
-                dataFile.IsStartFlag = true;
-                dataFile.Dispose();
+                discFile.DisableSaveFile();
+                discFile.IsStartFlag = true;
+                discFile.Dispose();
             }
         }
 
