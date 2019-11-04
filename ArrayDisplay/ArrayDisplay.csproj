@@ -108,6 +108,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BaseUtl\LogHelper.cs" />
     <Compile Include="DataUtl\DataFile.cs" />
     <Compile Include="NetUtl\WaveSocket.cs" />
     <Compile Include="UI\UIBValue.cs" />
@@ -164,7 +165,10 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="log4net.config" />
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

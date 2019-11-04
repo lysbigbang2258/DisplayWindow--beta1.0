@@ -14,6 +14,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using ArrayDisplay.BaseUtl;
 using ArrayDisplay.DataUtl;
 using ArrayDisplay.UI;
 
@@ -61,14 +62,14 @@ namespace ArrayDisplay.NetUtl
         {
             try
             {
-                waveSocket = new Socket(addressFamily: AddressFamily.InterNetwork, socketType: SocketType.Dgram, protocolType: ProtocolType.Udp);
+                waveSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
                 StartRcvEvent = new AutoResetEvent(false);
                 IsStopRcved = false;
                 semaphore = new SemaphoreSlim(0,1);
             }
             catch (Exception e)
             {
-                Console.WriteLine(value: e);
+                LogHelper.LogError(e);
                 throw;
             }
         }
@@ -153,31 +154,32 @@ namespace ArrayDisplay.NetUtl
             Ip = ip;
             try
             {
-                waveSocket.Bind(localEP: ip);
+                waveSocket.Bind(ip);
                 IsBuilded = true;
-                if (Equals(objA: ip, objB: ConstUdpArg.Src_NormWaveIp))
+                if (Equals(ip, ConstUdpArg.Src_NormWaveIp))
                 {
                     WorkInit();
                     WaveType = ConstUdpArg.WaveType.Normal;
                 }
-                else if (Equals(objA: ip, objB: ConstUdpArg.Src_OrigWaveIp))
+                else if (Equals(ip, ConstUdpArg.Src_OrigWaveIp))
                 {
                     OrigInit();
                     WaveType = ConstUdpArg.WaveType.Orig;
                 }
-                else if (Equals(objA: ip, objB: ConstUdpArg.Src_DelayWaveIp))
+                else if (Equals(ip, ConstUdpArg.Src_DelayWaveIp))
                 {
                     DelayInit();
                     WaveType = ConstUdpArg.WaveType.Delay;
                 }
 
                 WaveDataproc = new Dataproc();
-                WaveDataproc.Init(type: WaveType);
+                WaveDataproc.Init(WaveType);
                 return true;
             }
             catch (Exception e)
             {
-                Console.WriteLine(@"创建UDP失败...错误为{0}", arg0: e);
+                string str = @"创建UDP失败...错误为{0}"+ e;
+                LogHelper.LogInfo(str);
                 MessageBox.Show(@"创建UDP失败...");
             }
 
@@ -197,7 +199,7 @@ namespace ArrayDisplay.NetUtl
                     }
                     catch (Exception e)
                     {
-                    Console.WriteLine("Socket.Both");
+                    LogHelper.LogInfo("Socket.Both");
                     throw;
                     }
 
@@ -208,8 +210,7 @@ namespace ArrayDisplay.NetUtl
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Socket Close");
-                        Console.WriteLine(value: e);
+                        LogHelper.LogInfo("Socket Close");
                         throw;
                     }
 
@@ -219,7 +220,7 @@ namespace ArrayDisplay.NetUtl
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        LogHelper.LogError(e);
                         throw;
                     }
                 }
@@ -243,7 +244,7 @@ namespace ArrayDisplay.NetUtl
                 IsBuilded = false;
                 IsStopRcved = true;
                 linkbuffer.Clear();
-                Console.WriteLine(@"关闭UDP线程...");
+                LogHelper.LogInfo(@"关闭UDP线程...");
             }
         }
 
@@ -255,7 +256,7 @@ namespace ArrayDisplay.NetUtl
             waveSocket.ReceiveBufferSize = ConstUdpArg.DELAY_FRAME_NUMS * ConstUdpArg.DELAY_FRAME_LENGTH * 2;
             FrameNums = ConstUdpArg.DELAY_FRAME_NUMS;
             rcvBuf = new byte[ConstUdpArg.DELAY_FRAME_LENGTH];
-            RcvThread = new Thread(start: DelayThreadStart) { IsBackground = true, Priority = ThreadPriority.Highest, Name = "Delay" };
+            RcvThread = new Thread(DelayThreadStart) { IsBackground = true, Priority = ThreadPriority.Highest, Name = "Delay" };
             RcvThread.Start();
         }
 
@@ -264,9 +265,9 @@ namespace ArrayDisplay.NetUtl
         /// </summary>
         private void DelayThreadStart()
         {
-            IPEndPoint remote = new IPEndPoint(address: IPAddress.Any, port: 0);
+            IPEndPoint remote = new IPEndPoint(IPAddress.Any, 0);
             EndPoint senderRemote = remote;
-            Console.WriteLine(@"启动UDP线程...");
+            LogHelper.LogInfo(@"启动UDP线程...");
 
             while (true)
             {
@@ -282,21 +283,25 @@ namespace ArrayDisplay.NetUtl
                 try
                 {
                     // 接收数据
-                    int ret = waveSocket.ReceiveFrom(
-                        buffer: rcvBuf,
-                        offset: 0,
-                        size: rcvBuf.Length,
-                        socketFlags: SocketFlags.None,
-                        remoteEP: ref senderRemote);
+                    if (waveSocket.Available!=0)
+                    {
+                         waveSocket.ReceiveFrom(
+                            rcvBuf,
+                            0,
+                            rcvBuf.Length,
+                            SocketFlags.None,
+                            ref senderRemote);
+                    }
+                   
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(value: e);
+                    LogHelper.LogError(e);
                     IsRcving = false;
                     break;
                 }
 
-                PutDelayData(buf: rcvBuf);
+                PutDelayData(rcvBuf);
                 WaveDataproc.DelayBytesEvent.Set();
                 StartRcvEvent.Set();
             }
@@ -307,9 +312,9 @@ namespace ArrayDisplay.NetUtl
         /// </summary>
         private void NormalThreadStart()
         {
-            IPEndPoint remote = new IPEndPoint(address: IPAddress.Any, port: 0);
+            IPEndPoint remote = new IPEndPoint(IPAddress.Any, 0);
             EndPoint senderRemote = remote;
-            Console.WriteLine(@"启动UDP线程...");
+            LogHelper.LogInfo(@"启动UDP线程...");
             
             Task<bool> processTask = null;
 
@@ -344,20 +349,20 @@ namespace ArrayDisplay.NetUtl
                     {
                         if (waveSocket.Available >= 0)
                         {
-                            ret = waveSocket.ReceiveFrom(buffer: rcvBuf, remoteEP: ref senderRemote);
+                            ret = waveSocket.ReceiveFrom(rcvBuf, ref senderRemote);
                         }
 
                         if (ret != 0)
                         {
                             var rcvBytes = new byte[256];
-                            Array.Copy(sourceArray: rcvBuf, destinationArray: rcvBytes, length: rcvBytes.Length);
-                            recTmpBytes.Add(item: rcvBytes);
-                            saveBytes.AddRange(collection: rcvBytes);
+                            Array.Copy(rcvBuf, rcvBytes, rcvBytes.Length);
+                            recTmpBytes.Add(rcvBytes);
+                            saveBytes.AddRange(rcvBytes);
                         }
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        LogHelper.LogError(e);
                         break;
                     }
                 }
@@ -386,19 +391,17 @@ namespace ArrayDisplay.NetUtl
                                 }
                                 
                                 Splikbytes = PutWorkData(recSendBytes.ToArray());
-
-                                Console.WriteLine("splikbytes:" + Splikbytes.Length);
                                 var savetmp = saveBytes.ToArray();
 
                                 WorkSaveDataEventHandler?.Invoke(null, savetmp);
                                 if (Splikbytes != null)
                                 {
-                                    WorkDataEventHandler?.Invoke(null, e: Splikbytes);
+                                    WorkDataEventHandler?.Invoke(null, Splikbytes);
                                 }
                             }
                             catch (Exception e)
                             {
-                                Console.WriteLine(e);
+                                LogHelper.LogError(e);
                                 throw;
                             }
                             finally
@@ -410,7 +413,7 @@ namespace ArrayDisplay.NetUtl
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine(e);
+                            LogHelper.LogError(e);
                             throw;
                         }
                        
@@ -430,7 +433,7 @@ namespace ArrayDisplay.NetUtl
             waveSocket.ReceiveBufferSize = (ConstUdpArg.ORIG_FRAME_LENGTH + 2) * ConstUdpArg.ORIG_FRAME_NUMS * 2;
             FrameNums = DisPlayWindow.Info.OrigFramNums;
             rcvBuf = new byte[ConstUdpArg.ORIG_FRAME_LENGTH + 2];
-            RcvThread = new Thread(start: OrigThreadStart) { IsBackground = true, Priority = ThreadPriority.Highest, Name = "Orig" };
+            RcvThread = new Thread(OrigThreadStart) { IsBackground = true, Priority = ThreadPriority.Highest, Name = "Orig" };
             RcvThread.Start();
         }
 
@@ -439,9 +442,9 @@ namespace ArrayDisplay.NetUtl
         /// </summary>
         private void OrigThreadStart()
         {
-            IPEndPoint remote = new IPEndPoint(address: IPAddress.Any, port: 0);
+            IPEndPoint remote = new IPEndPoint(IPAddress.Any, 0);
             EndPoint senderRemote = remote;
-            Console.WriteLine(@"启动UDP线程...");
+            LogHelper.LogInfo(@"启动UDP线程...");
             while (true)
             {
                 StartRcvEvent.WaitOne();
@@ -454,22 +457,25 @@ namespace ArrayDisplay.NetUtl
 
                 try
                 {
-                    // 接收数据                         
-                    int ret = waveSocket.ReceiveFrom(
-                        buffer: rcvBuf,
-                        offset: 0,
-                        size: rcvBuf.Length,
-                        socketFlags: SocketFlags.None,
-                        remoteEP: ref senderRemote);
+                    if (waveSocket.Available!=0)
+                    {
+                        // 接收数据                         
+                        int ret = waveSocket.ReceiveFrom(
+                            rcvBuf,
+                            0,
+                            rcvBuf.Length,
+                            SocketFlags.None,
+                            ref senderRemote);
+                    }
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(value: e);
+                    LogHelper.LogError(e);
                     IsRcving = false;
                     break;
                 }
 
-                PutOrigData(buf: rcvBuf);
+                PutOrigData(rcvBuf);
                 WaveDataproc.OrigBytesEvent.Set();
                 StartRcvEvent.Set();
             }
@@ -487,12 +493,12 @@ namespace ArrayDisplay.NetUtl
             var head = new byte[2];
 
             int offset = 0;
-            if (!Equals(objA: Ip, objB: ConstUdpArg.Src_DelayWaveIp))
+            if (!Equals(Ip, ConstUdpArg.Src_DelayWaveIp))
             {
                 return;
             }
 
-            Array.Copy(sourceArray: buf, sourceIndex: 0, destinationArray: head, destinationIndex: 0, length: head.Length);
+            Array.Copy(buf, 0, head, 0, head.Length);
             int channel = head[1];
             if (channel > 7 || channel < 0)
             {
@@ -500,18 +506,18 @@ namespace ArrayDisplay.NetUtl
             }
 
             offset += head.Length;
-            Array.Copy(sourceArray: buf, sourceIndex: offset, destinationArray: temp, destinationIndex: 0, length: temp.Length);
+            Array.Copy(buf, offset, temp, 0, temp.Length);
             if (delayChannelOffsets[channel] >= WaveDataproc.DelayWaveBytes[0].Length)
             {
                 delayChannelOffsets[channel] = 0;
             }
 
             Array.Copy(
-                sourceArray: temp,
-                sourceIndex: 0,
-                destinationArray: WaveDataproc.DelayWaveBytes[channel],
-                destinationIndex: delayChannelOffsets[channel],
-                length: temp.Length);
+                temp,
+                0,
+                WaveDataproc.DelayWaveBytes[channel],
+                delayChannelOffsets[channel],
+                temp.Length);
             delayChannelOffsets[channel] += temp.Length;
         }
 
@@ -524,12 +530,12 @@ namespace ArrayDisplay.NetUtl
         {
             var head = new byte[2];
             int offset = 0;
-            if (!Equals(objA: Ip, objB: ConstUdpArg.Src_OrigWaveIp))
+            if (!Equals(Ip, ConstUdpArg.Src_OrigWaveIp))
             {
                 return;
             }
 
-            Array.Copy(sourceArray: buf, sourceIndex: 0, destinationArray: head, destinationIndex: 0, length: head.Length);
+            Array.Copy(buf, 0, head, 0, head.Length);
             int channel = head[0];
             int timdiv = head[1];
             if (channel < 0 && channel > ConstUdpArg.ORIG_CHANNEL_NUMS)
@@ -553,19 +559,19 @@ namespace ArrayDisplay.NetUtl
             }
 
             Array.Copy(
-                sourceArray: buf,
-                sourceIndex: offset,
-                destinationArray: WaveDataproc.OrigWaveBytes[channel + timdiv * 8],
-                destinationIndex: len,
-                length: buf.Length - 2);
+                buf,
+                offset,
+                WaveDataproc.OrigWaveBytes[channel + timdiv * 8],
+                len,
+                buf.Length - 2);
 
             var data = new byte[buf.Length - 2];
-            Array.Copy(sourceArray: buf, sourceIndex: offset, destinationArray: data, destinationIndex: 0, length: buf.Length - 2);
+            Array.Copy(buf, offset, data, 0, buf.Length - 2);
             origChannelOffsets[channel * 8 + timdiv] += data.Length;
             if (OrigSaveDataEventHandler != null)
             {
                 // 发送给保存线程
-                OrigSaveDataEventHandler(null, e: data);
+                OrigSaveDataEventHandler(null, data);
             }
         }
 
@@ -577,10 +583,10 @@ namespace ArrayDisplay.NetUtl
         {
             if (buf == null)
             {
-                Console.WriteLine(1);
+                return null;
             }
             
-            if (!Equals(objA: Ip, objB: ConstUdpArg.Src_NormWaveIp))
+            if (!Equals(Ip, ConstUdpArg.Src_NormWaveIp))
             {
                 return null;
             }
@@ -597,13 +603,13 @@ namespace ArrayDisplay.NetUtl
                 {
                     for (int i = 0; i < buf[index].Length / 4; i++)
                     {
-                        Array.Copy(buf[index], i * 4, resultBytes[i], index * 4, length: 4);
+                        Array.Copy(buf[index], i * 4, resultBytes[i], index * 4, 4);
                     }
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(value: e);
+                LogHelper.LogError(e);
                 throw;
             }
 
@@ -618,7 +624,7 @@ namespace ArrayDisplay.NetUtl
             waveSocket.ReceiveBufferSize = ConstUdpArg.WORK_FRAME_LENGTH * DisPlayWindow.Info.WorkFramNums * 2;
             FrameNums = DisPlayWindow.Info.WorkFramNums;
             rcvBuf = new byte[ConstUdpArg.WORK_FRAME_LENGTH * 2];
-            RcvThread = new Thread(start: NormalThreadStart) { IsBackground = true, Priority = ThreadPriority.Highest, Name = "WorkWave" };
+            RcvThread = new Thread(NormalThreadStart) { IsBackground = true, Priority = ThreadPriority.Highest, Name = "WorkWave" };
             RcvThread.Start();
         }
     }

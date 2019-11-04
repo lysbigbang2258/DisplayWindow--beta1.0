@@ -14,38 +14,43 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ArrayDisplay.BaseUtl;
 using ArrayDisplay.DataUtl;
 using ArrayDisplay.UI;
 
-namespace ArrayDisplay.NetUtl {
+namespace ArrayDisplay.NetUtl
+{
     /// <summary>
-    /// The udp command socket.
+    ///     The udp command socket.
     /// </summary>
-    public sealed class UdpCommandSocket : IDisposable {
+    public sealed class UdpCommandSocket : IDisposable
+    {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UdpCommandSocket"/> class.
+        ///     Initializes a new instance of the <see cref="UdpCommandSocket" /> class.
         /// </summary>
-        public UdpCommandSocket() {
+        public UdpCommandSocket()
+        {
             rcvsocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             rcvsocket.ReceiveTimeout = 2000;
             sedsocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             sedsocket.SendTimeout = 1000;
             sedsocket.ReceiveTimeout = 1000;
-            
         }
 
-        public void RcvThreadStart() {
+        public void RcvThreadStart()
+        {
             Thread thread = new Thread(Thread_Rcv);
             thread.Start();
             thread.IsBackground = true;
-            
         }
 
-        void Thread_Rcv() {
+        private void Thread_Rcv()
+        {
             EndPoint senderRemote = new IPEndPoint(IPAddress.Any, 0);
             var rcvUdpBuffer = new byte[100 * 4];
             int reflag = 0;
-            while(true) {
+            while (true)
+            {
                 int offset = 0;
                 try
                 {
@@ -53,34 +58,36 @@ namespace ArrayDisplay.NetUtl {
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    LogHelper.LogError(e);
                 }
-                
             }
         }
 
         /// <summary>
         ///     初始化Socket，绑定IP
         /// </summary>
-        public bool Init() {
-            try {
+        public bool Init()
+        {
+            try
+            {
                 SedIp = ConstUdpArg.Src_ComMsgIp;
                 RcvIp = ConstUdpArg.Src_ComDatIp;
                 rcvsocket.Bind(RcvIp);
                 sedsocket.Bind(SedIp);
                 return true;
-
             }
-            catch(Exception ) {
+            catch (Exception)
+            {
                 MessageBox.Show(@"网络初始化失败");
             }
             return false;
         }
 
         /// <summary>
-        /// The test web connect.
+        ///     The test web connect.
         /// </summary>
-        public bool TestConnect() {
+        public bool TestConnect()
+        {
             sedsocket.SendTo(ConstUdpArg.SwicthToOriginalWindow, ConstUdpArg.Dst_ComMsgIp);
             var testBuffer = new byte[18];
             EndPoint testRemote = new IPEndPoint(IPAddress.Any, 0);
@@ -102,7 +109,8 @@ namespace ArrayDisplay.NetUtl {
         }
 
         /// <summary>///切换功能窗口（波形或命令）/// </summary>
-        public void SwitchWindow(byte[] cmdBytes) {
+        public void SwitchWindow(byte[] cmdBytes)
+        {
             var tempBytes = new byte[8];
             cmdBytes.CopyTo(tempBytes, 0);
             Send(tempBytes, ConstUdpArg.Dst_ComMsgIp);
@@ -116,56 +124,58 @@ namespace ArrayDisplay.NetUtl {
         /// <param name="bytes">待发送byte[]数据</param>
         /// <param name="endPoint">下位机IP与端口号</param>
         /// <returns></returns>
-        public void Send(byte[] bytes, IPEndPoint endPoint) {
-            if (IsProcess || !IsSocketConnect) {
+        public void Send(byte[] bytes, IPEndPoint endPoint)
+        {
+            if (IsProcess || !IsSocketConnect)
+            {
                 return;
             }
 
-            try {
+            try
+            {
                 IsProcess = true;
                 var sendbytes = new byte[bytes.Length];
                 bytes.CopyTo(sendbytes, 0);
                 IPEndPoint sendip = endPoint;
                 EndPoint senderRemote = new IPEndPoint(IPAddress.Any, 0);
-                try {
+                try
+                {
                     sedsocket.SendTo(sendbytes, sendip);
                 }
-                catch(Exception e) {
-                    Console.WriteLine(e);
+                catch (Exception e)
+                {
+                    LogHelper.LogError(e);
                     throw;
                 }
-               
-//                Console.WriteLine("发送数据:{0}", BitConverter.ToString(sendbytes, 0, sendbytes.Length));
 
                 var rcvUdpBuffer = new byte[18];
-                try {
+                try
+                {
                     int offset = 0;
-                    try {
+                    try
+                    {
                         int ret = sedsocket.ReceiveFrom(rcvUdpBuffer, offset, rcvUdpBuffer.Length - offset, SocketFlags.None, ref senderRemote);
                         offset += ret;
                         IsProcess = false;
                     }
-                    catch(Exception e) {
-                        Console.WriteLine(e);
+                    catch (Exception e)
+                    {
+                        LogHelper.LogError(e);
                         throw;
                     }
 
                     var flagBytes = new byte[8];
                     Array.Copy(rcvUdpBuffer, 0, flagBytes, 0, 8);
                     string temp = BitConverter.ToString(flagBytes);
-
-                    // Console.WriteLine("接收回传数据:{0}", temp);
                 }
-                catch(Exception e) {
-                    Console.WriteLine(e);
+                catch (Exception e)
+                {
+                    LogHelper.LogError(e);
                     throw;
                 }
             }
-            catch(Exception e) {
-                Console.WriteLine(e);
-                throw;
-            }
-            finally {
+            finally
+            {
                 IsProcess = false;
             }
         }
@@ -174,52 +184,45 @@ namespace ArrayDisplay.NetUtl {
 
         #region Property
 
-        public IPEndPoint SedIp {
-            get;
-            set;
-        }
+        public IPEndPoint SedIp { get; set; }
 
-        public IPEndPoint RcvIp {
-            get;
-            set;
-        }
+        public IPEndPoint RcvIp { get; set; }
 
-        bool IsProcess {
-            get;
-            set;
-        }
+        private bool IsProcess { get; set; }
 
-        bool IsGetRedata {
-            get;
-            set;
-        }
+        private bool IsGetRedata { get; set; }
 
         #endregion
 
         #region Field
 
-        readonly Socket rcvsocket;
-        readonly Socket sedsocket;
+        private readonly Socket rcvsocket;
+        private readonly Socket sedsocket;
         public bool IsSocketConnect;
 
         #endregion
 
         #region IDisposable
 
-        void Dispose(bool disposing) {
-            if (disposing) {
-                if (rcvsocket != null) {
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (rcvsocket != null)
+                {
                     rcvsocket.Dispose();
                 }
 
-                if (sedsocket != null) {
+                if (sedsocket != null)
+                {
                     sedsocket.Dispose();
                 }
             }
         }
 
         /// <inheritdoc />
-        public void Dispose() {
+        public void Dispose()
+        {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -233,9 +236,12 @@ namespace ArrayDisplay.NetUtl {
         ///     一次发送9条指令,包含:设备类型,设备ID,设备MAC,ADC_Err,脉冲周期,脉冲延时,脉冲宽度,ADC偏移,ADC禁用
         ///     接收反馈信息长度分别为:26bit,26bit,24bit,21bit,20bit,20bit,20bit,19bit,19bit
         /// </summary>
-        public void GetDeviceState() {
-            if (!IsSocketConnect) {
+        public void GetDeviceState()
+        {
+            if (!IsSocketConnect)
+            {
                 MessageBox.Show("网络未连接");
+                LogHelper.LogInfo("网络未连接");
                 return;
             }
 
@@ -270,56 +276,65 @@ namespace ArrayDisplay.NetUtl {
         #region 读(发送指令及数据)
 
         /// <summary>读取:设备类型</summary>
-        public void ReadDeviceType() {
+        public void ReadDeviceType()
+        {
             Send(ConstUdpArg.Device_Type, ConstUdpArg.Dst_ComMsgIp);
             ReceiveDeviceType(26);
         }
 
         /// <summary>读取:设备ID</summary>
-        public void ReadDeviceId() {
+        public void ReadDeviceId()
+        {
             Send(ConstUdpArg.Device_Id, ConstUdpArg.Dst_ComMsgIp);
             ReceiveDeviceId(26);
         }
 
         /// <summary>读取:设备MAC</summary>
-        public void ReadDeviceMac() {
+        public void ReadDeviceMac()
+        {
             Send(ConstUdpArg.Device_Mac, ConstUdpArg.Dst_ComMsgIp);
             ReceiveDeviceMac(24);
         }
 
         /// <summary>读取:脉冲周期</summary>
-        public void ReadPulsePeriod() {
+        public void ReadPulsePeriod()
+        {
             Send(ConstUdpArg.Pulse_Period_Read, ConstUdpArg.Dst_ComMsgIp);
             ReceivePulsePeriod(20);
         }
 
         /// <summary>读取:脉冲延时</summary>
-        public void ReadPulseDelay() {
+        public void ReadPulseDelay()
+        {
             Send(ConstUdpArg.Pulse_Delay_Read, ConstUdpArg.Dst_ComMsgIp);
             ReceivePulseDelay(20);
         }
 
         /// <summary>读取:脉冲宽度</summary>
-        public void ReadPulseWidth() {
+        public void ReadPulseWidth()
+        {
             Send(ConstUdpArg.Pulse_Width_Read, ConstUdpArg.Dst_ComMsgIp);
             ReceivePulseWidth(20);
         }
 
         /// <summary>读取:ADC偏移</summary>
-        public void ReadAdcOffset() {
+        public void ReadAdcOffset()
+        {
             Send(ConstUdpArg.GetAdcOffsetRead(DisPlayWindow.Info.AdcNum), ConstUdpArg.Dst_ComMsgIp);
             ReceiveAdcOffset(19);
         }
 
         /// <summary>///读取延时信息/// </summary>
-        public void ReadDelyTime() {
+        public void ReadDelyTime()
+        {
             var sedip = ConstUdpArg.GetDelayTimeReadCommand(DisPlayWindow.Info.DelayChannel - 1);
             Send(sedip, ConstUdpArg.Dst_ComMsgIp);
             ReceiveChannelDeleyTime(20);
         }
 
         /// <summary>///读取ADC通道/// </summary>
-        public void ReadCanChannelLen() {
+        public void ReadCanChannelLen()
+        {
             var sedip = ConstUdpArg.GetDacChannelReadCommand(DisPlayWindow.Info.DacChannel - 1);
             Send(sedip, ConstUdpArg.Dst_ComMsgIp);
             ReceiveCanChannelLen(20);
@@ -331,25 +346,29 @@ namespace ArrayDisplay.NetUtl {
 
         /// <summary>写:脉冲周期</summary>
         /// <param name="data">数据,16bit,配置值/5</param>
-        public void WritePulsePeriod(byte[] data) {
+        public void WritePulsePeriod(byte[] data)
+        {
             WriteData(ConstUdpArg.Pulse_Period_Write, data);
         }
 
         /// <summary>写:脉冲延时</summary>
         /// <param name="data">数据,16bit,配置值/5</param>
-        public void WritePulseDelay(byte[] data) {
+        public void WritePulseDelay(byte[] data)
+        {
             WriteData(ConstUdpArg.Pulse_Delay_Write, data);
         }
 
         /// <summary>写:脉冲宽度</summary>
         /// <param name="data">数据,16bit,配置值/5</param>
-        public void WritePulseWidth(byte[] data) {
+        public void WritePulseWidth(byte[] data)
+        {
             WriteData(ConstUdpArg.Pulse_Width_Write, data);
         }
 
         /// <summary>写:ADC偏移</summary>
         /// <param name="data">数据8bit,[(配置值+1.2)/1.2]*128</param>
-        public void WriteAdcOffset(byte data) {
+        public void WriteAdcOffset(byte data)
+        {
             var addr = ConstUdpArg.GetAdcOffsetWrite(DisPlayWindow.Info.AdcNum);
             var sendData = new byte[addr.Length + 1];
             Array.Copy(addr, sendData, addr.Length);
@@ -362,8 +381,9 @@ namespace ArrayDisplay.NetUtl {
 
         /// <summary>写:延时时间</summary>
         /// <param name="data">数据,16bit,配置值/5</param>
-        public void WriteDelayTime(byte[] data) {
-            var tmp = ConstUdpArg.GetDelayTimeWriteCommand(DisPlayWindow.Info.DelayChannel - 1 );
+        public void WriteDelayTime(byte[] data)
+        {
+            var tmp = ConstUdpArg.GetDelayTimeWriteCommand(DisPlayWindow.Info.DelayChannel - 1);
             WriteData(tmp, data);
         }
 
@@ -371,7 +391,8 @@ namespace ArrayDisplay.NetUtl {
         ///     写入改变原始信号通道号
         /// </summary>
         /// <param name="num"></param>
-        public void WriteOrigChannel(int num) {
+        public void WriteOrigChannel(int num)
+        {
             var data = ConstUdpArg.OrigChannel_Write;
             var temp = new byte[1];
             temp[0] = (byte) num;
@@ -382,7 +403,8 @@ namespace ArrayDisplay.NetUtl {
         ///     写入改变原始信号时分号
         /// </summary>
         /// <param name="num"></param>
-        public void WriteOrigTDiv(int num) {
+        public void WriteOrigTDiv(int num)
+        {
             var data = ConstUdpArg.OrigTimDiv_Write;
             var temp = new byte[1];
             temp[0] = (byte) num;
@@ -393,7 +415,8 @@ namespace ArrayDisplay.NetUtl {
         ///     写入Dac通道号
         /// </summary>
         /// <param name="num"></param>
-        public void WriteDacChannel(int num) {
+        public void WriteDacChannel(int num)
+        {
             var partAddr = ConstUdpArg.DacChannel_Write;
             var addr = new byte[partAddr.Length + 1];
             Array.Copy(partAddr, 0, addr, 0, partAddr.Length);
@@ -425,21 +448,21 @@ namespace ArrayDisplay.NetUtl {
         public void WritePhase(byte[][] datalistBytes)
         {
             var bytelist = new List<byte>();
-            
-            Task.Run(() => {
-                         for(int i = 0; i < datalistBytes.Length; i++) {
-                             bytelist.AddRange(ConstUdpArg.Phase_Write);
-                             byte t1 = (byte) (8 + i / 4);
-                             byte t2 = (byte) (64 * (i % 4));
-                             bytelist.Add(t1);
-                             bytelist.Add(t2);
-                             WriteData(bytelist.ToArray(), datalistBytes[i]);
-                             
-                             bytelist.Clear();
-                         }
-                     });
 
+            Task.Run(() =>
+            {
+                for (int i = 0; i < datalistBytes.Length; i++)
+                {
+                    bytelist.AddRange(ConstUdpArg.Phase_Write);
+                    byte t1 = (byte) (8 + i / 4);
+                    byte t2 = (byte) (64 * (i % 4));
+                    bytelist.Add(t1);
+                    bytelist.Add(t2);
+                    WriteData(bytelist.ToArray(), datalistBytes[i]);
 
+                    bytelist.Clear();
+                }
+            });
         }
 
         #endregion
@@ -448,25 +471,29 @@ namespace ArrayDisplay.NetUtl {
 
         /// <summary>存:脉冲周期</summary>
         /// <param name="data">数据,每次只能存入8bit,配置值/5</param>
-        public void SavePulsePeriod(byte[] data) {
+        public void SavePulsePeriod(byte[] data)
+        {
             SaveData(ConstUdpArg.Pulse_Period_Save, data);
         }
 
         /// <summary>存:脉冲延时</summary>
         /// <param name="data">数据,每次只能存入8bit,配置值/5</param>
-        public void SavePulseDelay(byte[] data) {
+        public void SavePulseDelay(byte[] data)
+        {
             SaveData(ConstUdpArg.Pulse_Delay_Save, data);
         }
 
         /// <summary>存:脉冲宽度</summary>
         /// <param name="data">数据,每次只能存入8bit,配置值/5</param>
-        public void SavePulseWidth(byte[] data) {
+        public void SavePulseWidth(byte[] data)
+        {
             SaveData(ConstUdpArg.Pulse_Width_Save, data);
         }
 
         /// <summary>存:ADC偏移</summary>
         /// <param name="data">数据8bit,[(配置值+1.2)/1.2]*128</param>
-        public void SaveAdcOffset(byte data) {
+        public void SaveAdcOffset(byte data)
+        {
             var addr = ConstUdpArg.GetAdcOffsetSave(DisPlayWindow.Info.AdcNum);
             var sendData = new byte[addr.Length + 1];
             Array.Copy(addr, sendData, addr.Length);
@@ -479,7 +506,8 @@ namespace ArrayDisplay.NetUtl {
 
         /// <summary>存:延时通道</summary>
         /// <param name="data">数据8bit,[(配置值+1.2)/1.2]*128</param>
-        public void SaveDelayTime(byte[] data) {
+        public void SaveDelayTime(byte[] data)
+        {
             var cmd = ConstUdpArg.GetDelayTimeSaveCommand(int.Parse(DisPlayWindow.HMainWindow.tb_deleyChannel.Text));
             SaveData(cmd, data);
         }
@@ -498,7 +526,8 @@ namespace ArrayDisplay.NetUtl {
         /// </summary>
         /// <param name="addr">指令及地址</param>
         /// <param name="data">待发送的数据</param>
-        void WriteData(byte[] addr, byte[] data) {
+        private void WriteData(byte[] addr, byte[] data)
+        {
             var sendData = new byte[addr.Length + data.Length];
             Array.Copy(addr, 0, sendData, 0, addr.Length);
 
@@ -513,7 +542,8 @@ namespace ArrayDisplay.NetUtl {
         /// </summary>
         /// <param name="addr">指令及地址</param>
         /// <param name="data">待发送的数据</param>
-        void SaveData(byte[] addr, byte[] data) {
+        private void SaveData(byte[] addr, byte[] data)
+        {
             if (!IsSocketConnect)
             {
                 return;
@@ -522,11 +552,12 @@ namespace ArrayDisplay.NetUtl {
             var sendData = new byte[addr.Length + 1];
             Array.Copy(addr, sendData, addr.Length);
 
-            for(int i = 0; i < data.Length; i++) {
+            for (int i = 0; i < data.Length; i++)
+            {
                 byte d = data[i];
 
                 // 每循环一次地址(倒数第二位)+1
-                sendData.SetValue((byte)(sendData[sendData.Length - 2] + i), sendData.Length - 2);
+                sendData.SetValue((byte) (sendData[sendData.Length - 2] + i), sendData.Length - 2);
 
                 // 最后一个元素是数据
                 sendData.SetValue(d, sendData.Length - 1);
@@ -547,76 +578,77 @@ namespace ArrayDisplay.NetUtl {
         ///     接收设备类型数据
         /// </summary>
         /// <param name="bufferLength">buffer大小</param>
-        public void ReceiveDeviceType(int bufferLength) {
+        public void ReceiveDeviceType(int bufferLength)
+        {
             var rcvUdpBuffer = ReadRemote(bufferLength);
-            if (rcvUdpBuffer == null) {
-                Console.WriteLine("接收设备类型数据错误");
+            if (rcvUdpBuffer == null)
+            {
+                LogHelper.LogInfo("接收设备类型数据错误");
                 return;
             }
-
-                string mcType = Encoding.ASCII.GetString(rcvUdpBuffer, 6, 8);
-                Console.WriteLine("mc_type={0}", mcType);
-                DisPlayWindow.Info.McType = mcType;
-            
+            string mcType = Encoding.ASCII.GetString(rcvUdpBuffer, 6, 8);
+            DisPlayWindow.Info.McType = mcType;
         }
 
         /// <summary>
         ///     接收设备ID数据
         /// </summary>
         /// <param name="bufferLength">buffer大小</param>
-        public void ReceiveDeviceId(int bufferLength) {
+        public void ReceiveDeviceId(int bufferLength)
+        {
             var rcvUdpBuffer = ReadRemote(bufferLength);
-            if (rcvUdpBuffer == null) {
-                Console.WriteLine("接收设备ID数据错误");
+            if (rcvUdpBuffer == null)
+            {
+                LogHelper.LogInfo("接收设备ID数据错误");
                 return;
             }
 
             string mcId = string.Empty;
-                for(int i = 0; i < 8; i++) {
-                    mcId += BitConverter.ToString(rcvUdpBuffer, 6 + i, 1);
-                }
-
-                Console.WriteLine("mc_id={0}", mcId);
-                DisPlayWindow.Info.McId = mcId;
-            
+            for (int i = 0; i < 8; i++)
+            {
+                mcId += BitConverter.ToString(rcvUdpBuffer, 6 + i, 1);
+            }
+            DisPlayWindow.Info.McId = mcId;
         }
 
         /// <summary>
         ///     接收设备Mac数据
         /// </summary>
         /// <param name="bufferLength">buffer大小</param>
-        public void ReceiveDeviceMac(int bufferLength) {
+        public void ReceiveDeviceMac(int bufferLength)
+        {
             var rcvUdpBuffer = ReadRemote(bufferLength);
-            if (rcvUdpBuffer == null) {
-                Console.WriteLine("接收设备Mac数据错误");
+            if (rcvUdpBuffer == null)
+            {
+                LogHelper.LogInfo("接收设备Mac数据错误");
                 return;
             }
 
-                string mcMac = string.Empty;
-                for(int i = 0; i < 6; i++) {
-                    if (i > 0) {
-                        mcMac += ":" + BitConverter.ToString(rcvUdpBuffer, 6 + i, 1);
-                    }
-                    else {
-                        mcMac += BitConverter.ToString(rcvUdpBuffer, 6 + i, 1);
-                    }
+            string mcMac = string.Empty;
+            for (int i = 0; i < 6; i++)
+            {
+                if (i > 0)
+                {
+                    mcMac += ":" + BitConverter.ToString(rcvUdpBuffer, 6 + i, 1);
                 }
-
-                Console.WriteLine("mc_mac={0}", mcMac);
-                DisPlayWindow.Info.McMac = mcMac;
-            
-            
-           
+                else
+                {
+                    mcMac += BitConverter.ToString(rcvUdpBuffer, 6 + i, 1);
+                }
+            }
+            DisPlayWindow.Info.McMac = mcMac;
         }
 
         /// <summary>
-        ///    接收脉冲周期数据
+        ///     接收脉冲周期数据
         /// </summary>
         /// <param name="bufferLength"></param>
-        public void ReceivePulsePeriod(int bufferLength) {
+        public void ReceivePulsePeriod(int bufferLength)
+        {
             var rcvUdpBuffer = ReadRemote(bufferLength);
-            if (rcvUdpBuffer == null) {
-                Console.WriteLine("接收脉冲周期数据错误");
+            if (rcvUdpBuffer == null)
+            {
+                LogHelper.LogInfo("接收脉冲周期数据错误");
                 return;
             }
 
@@ -629,15 +661,17 @@ namespace ArrayDisplay.NetUtl {
         }
 
         /// <summary>
-        ///    接收脉冲延迟数据
+        ///     接收脉冲延迟数据
         /// </summary>
         /// <param name="bufferLength"></param>
-        public void ReceivePulseDelay(int bufferLength) {
+        public void ReceivePulseDelay(int bufferLength)
+        {
             var rcvUdpBuffer = ReadRemote(bufferLength);
 
             // 返回数据以指令为开头
-            if (rcvUdpBuffer == null) {
-                Console.WriteLine("接收脉冲延迟错误");
+            if (rcvUdpBuffer == null)
+            {
+                LogHelper.LogInfo("接收脉冲延迟错误");
                 return;
             }
 
@@ -649,15 +683,17 @@ namespace ArrayDisplay.NetUtl {
         }
 
         /// <summary>
-        ///  接收脉冲宽度数据
+        ///     接收脉冲宽度数据
         /// </summary>
         /// <param name="bufferLength"></param>
-        public void ReceivePulseWidth(int bufferLength) {
+        public void ReceivePulseWidth(int bufferLength)
+        {
             var rcvUdpBuffer = ReadRemote(bufferLength);
 
             // 返回数据以指令为开头
-            if (rcvUdpBuffer == null) {
-                Console.WriteLine("接收脉冲宽度错误");
+            if (rcvUdpBuffer == null)
+            {
+                LogHelper.LogInfo("接收脉冲宽度错误");
                 return;
             }
 
@@ -669,15 +705,17 @@ namespace ArrayDisplay.NetUtl {
         }
 
         /// <summary>
-        /// 接收ADC数据
+        ///     接收ADC数据
         /// </summary>
         /// <param name="bufferLength"></param>
-        public void ReceiveAdcOffset(int bufferLength) {
+        public void ReceiveAdcOffset(int bufferLength)
+        {
             var rcvUdpBuffer = ReadRemote(bufferLength);
 
             // 返回数据以指令为开头
-            if (rcvUdpBuffer == null) {
-                Console.WriteLine("接收Adc偏移错误");
+            if (rcvUdpBuffer == null)
+            {
+                LogHelper.LogInfo("接收Adc偏移错误");
                 return;
             }
 
@@ -689,15 +727,17 @@ namespace ArrayDisplay.NetUtl {
         }
 
         /// <summary>
-        ///  接收通道延时
+        ///     接收通道延时
         /// </summary>
         /// <param name="bufferLength"></param>
-        public void ReceiveChannelDeleyTime(int bufferLength) {
+        public void ReceiveChannelDeleyTime(int bufferLength)
+        {
             var rcvUdpBuffer = ReadRemote(bufferLength);
 
             // 返回数据以指令为开头
-            if (rcvUdpBuffer == null) {
-                Console.WriteLine(" 接收通道延时错误");
+            if (rcvUdpBuffer == null)
+            {
+                LogHelper.LogInfo(" 接收通道延时错误");
                 return;
             }
 
@@ -709,13 +749,15 @@ namespace ArrayDisplay.NetUtl {
         }
 
         /// <summary>
-        ///  接收ADC通道
+        ///     接收ADC通道
         /// </summary>
         /// <param name="bufferLength"></param>
-        public void ReceiveCanChannelLen(int bufferLength) {
+        public void ReceiveCanChannelLen(int bufferLength)
+        {
             var rcvUdpBuffer = ReadRemote(bufferLength);
-            if (rcvUdpBuffer == null) {
-                Console.WriteLine("接收ADC通道错误");
+            if (rcvUdpBuffer == null)
+            {
+                LogHelper.LogInfo("接收ADC通道错误");
                 return;
             }
 
@@ -730,13 +772,16 @@ namespace ArrayDisplay.NetUtl {
         /// 将接收到的(脉冲周期/脉冲延时/脉冲宽度/ADC偏移)数据转换为界面显示的值
         /// <param name="data"></param>
         /// <returns></returns>
-        int ToInt(byte[] data) {
-            if (data == null || data.Length < 1) {
+        private int ToInt(byte[] data)
+        {
+            if (data == null || data.Length < 1)
+            {
                 return -1;
             }
 
-            if (data.Length != 2) {
-                throw new Exception("异常(脉冲周期/脉冲延时/脉冲宽度)数据.");
+            if (data.Length != 2)
+            {
+                LogHelper.LogInfo("异常(脉冲周期/脉冲延时/脉冲宽度)数据.");
             }
 
             int hig = data[0] * 256;
@@ -747,7 +792,8 @@ namespace ArrayDisplay.NetUtl {
         /// 读取远程发送的UDP数据
         /// <param name="bufferLength">缓存区大小</param>
         /// <returns></returns>
-        byte[] ReadRemote(int bufferLength) {
+        private byte[] ReadRemote(int bufferLength)
+        {
             if (!IsSocketConnect)
             {
                 return null;
@@ -756,16 +802,7 @@ namespace ArrayDisplay.NetUtl {
             EndPoint senderRemote = new IPEndPoint(IPAddress.Any, 0);
             var rcvUdpBuffer = new byte[bufferLength * 4];
             int offset = 0;
-            try
-            {
-                rcvsocket.ReceiveFrom(rcvUdpBuffer, offset, rcvUdpBuffer.Length - offset, SocketFlags.None, ref senderRemote);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-
+            rcvsocket.ReceiveFrom(rcvUdpBuffer, offset, rcvUdpBuffer.Length - offset, SocketFlags.None, ref senderRemote);
             return rcvUdpBuffer;
         }
 
@@ -773,36 +810,36 @@ namespace ArrayDisplay.NetUtl {
         /// 由于UDP返回数据包可能不是按发送命令顺序,此处增加识别处理
         /// <param name="cmd"></param>
         /// <param name="data"></param>
-        void SetData(string cmd, byte[] data) {
+        private void SetData(string cmd, byte[] data)
+        {
             // 得到发送指令后与ConstUdpArg中指令集对比,再将对应的数据处理后显示到界面上
-            if (Encoding.ASCII.GetString(ConstUdpArg.Pulse_Period_Read, 0, 6).Equals(cmd)) {
+            if (Encoding.ASCII.GetString(ConstUdpArg.Pulse_Period_Read, 0, 6).Equals(cmd))
+            {
                 // 脉冲周期
                 int pulsePeriod = ToInt(data) * 5;
-                Console.WriteLine("pulse_period={0}", pulsePeriod);
                 DisPlayWindow.Info.PulsePeriod = pulsePeriod;
             }
-            else if (Encoding.ASCII.GetString(ConstUdpArg.Pulse_Delay_Read, 0, 6).Equals(cmd)) {
+            else if (Encoding.ASCII.GetString(ConstUdpArg.Pulse_Delay_Read, 0, 6).Equals(cmd))
+            {
                 // 脉冲延时
                 int pulseDelay = ToInt(data) * 5;
-                Console.WriteLine("pulse_delay={0}", pulseDelay);
                 DisPlayWindow.Info.PulseDelay = pulseDelay;
             }
-            else if (Encoding.ASCII.GetString(ConstUdpArg.Pulse_Width_Read, 0, 6).Equals(cmd)) {
+            else if (Encoding.ASCII.GetString(ConstUdpArg.Pulse_Width_Read, 0, 6).Equals(cmd))
+            {
                 // 脉冲宽度
                 int pulseWidth = ToInt(data) * 5;
-                Console.WriteLine("pulse_width={0}", pulseWidth);
                 DisPlayWindow.Info.PulseWidth = pulseWidth;
             }
-            else if (Encoding.ASCII.GetString(ConstUdpArg.GetAdcOffsetRead(DisPlayWindow.Info.AdcNum), 0, 6).Equals(cmd)) {
+            else if (Encoding.ASCII.GetString(ConstUdpArg.GetAdcOffsetRead(DisPlayWindow.Info.AdcNum), 0, 6).Equals(cmd))
+            {
                 // ADC偏移
                 double adcOffset = data[0];
                 adcOffset = adcOffset * 1.2 / 128 - 1.2;
-
-                // AdcOffset.ToString("G3");
-                Console.WriteLine("adc_offset={0}", adcOffset.ToString("G2"));
                 DisPlayWindow.Info.AdcOffset = adcOffset.ToString("G2");
             }
-            else if (Encoding.ASCII.GetString(ConstUdpArg.GetDelayTimeReadCommand(DisPlayWindow.Info.DelayChannel - 1), 0, 6).Equals(cmd)) {
+            else if (Encoding.ASCII.GetString(ConstUdpArg.GetDelayTimeReadCommand(DisPlayWindow.Info.DelayChannel - 1), 0, 6).Equals(cmd))
+            {
                 // 延迟通道
                 byte t = data[0];
                 data[0] = data[1];
@@ -810,18 +847,15 @@ namespace ArrayDisplay.NetUtl {
                 int delaytime = BitConverter.ToUInt16(data, 0);
                 DisPlayWindow.Info.DelayTime = delaytime;
             }
-            else if (Encoding.ASCII.GetString(ConstUdpArg.GetDacChannelReadCommand(DisPlayWindow.Info.DacChannel - 1), 0, 6).Equals(cmd)) {
+            else if (Encoding.ASCII.GetString(ConstUdpArg.GetDacChannelReadCommand(DisPlayWindow.Info.DacChannel - 1), 0, 6).Equals(cmd))
+            {
                 // Dac数据
                 int result = data[0] * 256;
                 result += data[1];
                 DisPlayWindow.Info.DacLenth = result;
             }
-            else {
-                // 其他,未定义
-                Console.WriteLine("cmd={0}", cmd);
-            }
         }
-
-        #endregion
     }
+
+    #endregion
 }

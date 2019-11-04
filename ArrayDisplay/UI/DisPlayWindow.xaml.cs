@@ -22,6 +22,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Forms;
 using System.Windows.Input;
+using ArrayDisplay.BaseUtl;
 using ArrayDisplay.DataUtl;
 using ArrayDisplay.DiscFile;
 using ArrayDisplay.NetUtl;
@@ -265,7 +266,7 @@ namespace ArrayDisplay.UI
                 }
                 catch (Exception exception)
                 {
-                    Console.WriteLine(value: exception);
+                    LogHelper.LogError(exception);
                     throw;
                 }
             });
@@ -472,8 +473,6 @@ namespace ArrayDisplay.UI
         {
             Task.Run(() =>
             {
-                // try
-                // {
                 udpCommandSocket.SwitchWindow(cmdBytes: ConstUdpArg.SwicthToDeleyWindow);
                 if (DelayWaveData == null)
                 {
@@ -482,7 +481,6 @@ namespace ArrayDisplay.UI
                     {
                         return;
                     }
-
                     btn_delaystart.Dispatcher.InvokeAsync(() => { btn_delaystart.Content = "停止"; });
                     DelayWaveData.StartRcvEvent.Set();
                 }
@@ -500,7 +498,7 @@ namespace ArrayDisplay.UI
                     }
                     catch (Exception exception)
                     {
-                        Console.WriteLine(value: exception);
+                        LogHelper.LogError(exception);
                         throw;
                     }
                 }
@@ -509,12 +507,6 @@ namespace ArrayDisplay.UI
                     DelayWaveData.StartRcvEvent.Set();
                     btn_delaystart.Dispatcher.InvokeAsync(() => { btn_delaystart.Content = "停止"; });
                 }
-                // catch (Exception exception)
-                // {
-                //     Console.WriteLine(@"错误代码{0}", exception);
-                //     Console.WriteLine(@"网络地址错误...");
-                //     MessageBox.Show(@"网络地址错误...");
-                // }
             });
         }
 
