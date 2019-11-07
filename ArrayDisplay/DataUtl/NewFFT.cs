@@ -52,7 +52,7 @@ namespace ArrayDisplay.DataUtl {
                 xwaveform[i] = deltaFreq * i;
 
 //                subsetOfMagnitudes[i] = magnitudes[i] * scalingFactor * Math.Sqrt(2.0); // Storing only half the magnitudes array.
-                
+
                 subsetOfMagnitudes[i] = magnitudes[i] * scalingFactor * 2; // Storing only half the magnitudes array.
                 subsetOfPhases[i] = phases[i]; // Storing only half of the phases array.
 

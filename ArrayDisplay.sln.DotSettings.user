@@ -1,9 +1,12 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=77C14530_002DC873_002D4836_002DB79C_002DB4F8350266D7_002Fd_003Anet_002Ff_003ADataproc_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
-  &lt;Assembly Path="D:\显控台\程序代码\cap\cap\bin\Debug\SlimDX.dll" /&gt;&#xD;
-  &lt;Assembly Path="I:\显控台\程序代码\DisplayWindow\ArrayDisplay\dll\debug\ImageButtonControl.dll" /&gt;&#xD;
   &lt;Assembly Path="F:\MyProject\Work Project\HGJ软件相关\ArrayDisplay\DisplayWindow--beta2.0\packages\log4net.2.0.8\lib\net45-full\log4net.dll" /&gt;&#xD;
+  &lt;Assembly Path="F:\MyProject\Work Project\DisplayWindow--beta2.0\ArrayDisplay\dll\SlimDX.dll" /&gt;&#xD;
+  &lt;Assembly Path="F:\MyProject\Work Project\DisplayWindow--beta2.0\ArrayDisplay\dll\NationalInstruments.Controls.Graphs.dll" /&gt;&#xD;
+  &lt;Assembly Path="F:\MyProject\Work Project\DisplayWindow--beta2.0\ArrayDisplay\dll\NationalInstruments.Common.dll" /&gt;&#xD;
+  &lt;Assembly Path="F:\MyProject\Work Project\DisplayWindow--beta2.0\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll" /&gt;&#xD;
+  &lt;Assembly Path="F:\MyProject\Work Project\DisplayWindow--beta2.0\packages\SharpDX.Direct3D10.4.2.0\lib\net45\SharpDX.Direct3D10.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:Int64 x:Key="/Default/Environment/SearchAndNavigation/DefaultOccurrencesGroupingIndex/@EntryValue">0</s:Int64>
 	<s:Boolean x:Key="/Default/Housekeeping/Bookmarks/NumberedBookmarks/=Bookmark1/@KeyIndexDefined">True</s:Boolean>

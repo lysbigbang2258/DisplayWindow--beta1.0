@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="DisPlayWindow.xaml.cs" company="">
-//   
+//
 // </copyright>
 // <summary>
 //   DisPlayWindow.xaml 的交互逻辑
@@ -53,13 +53,7 @@ namespace ArrayDisplay.UI
         // int _port;
         private DataUtl.DiscFile discFile;
 
-        private Dataproc dataproc;
-
         private ObservableCollection<UIBValue> observableCollection;
-
-        private int origChannel;
-
-        private Stopwatch stopwatch;
 
         private UdpCommandSocket udpCommandSocket;
 
@@ -189,11 +183,6 @@ namespace ArrayDisplay.UI
                 udpCommandSocket.Dispose();
             }
 
-            if (dataproc != null)
-            {
-                dataproc.Dispose();
-            }
-
             if (NormWaveData != null)
             {
                 NormWaveData.Dispose();
@@ -267,7 +256,7 @@ namespace ArrayDisplay.UI
                 catch (Exception exception)
                 {
                     LogHelper.LogError(exception);
-                    throw;
+                    MessageBox.Show("网络未连接");
                 }
             });
         }
@@ -356,7 +345,7 @@ namespace ArrayDisplay.UI
                     delay_graph.Refresh();
                     btn_delaystart.Content = "启动";
                 });
-               
+
             }
 
         }
@@ -607,7 +596,7 @@ namespace ArrayDisplay.UI
                             tb.Text = "1";
                         }
 
-                        OnDelayTimeWrite_OnClick(null, null); // 发送通道延时值 
+                        OnDelayTimeWrite_OnClick(null, null); // 发送通道延时值
                     }
                     catch (Exception exception)
                     {
@@ -1295,7 +1284,7 @@ namespace ArrayDisplay.UI
                     WaveSocket waveSocket = new WaveSocket();
                     try
                     {
-                        
+
                         waveSocket.StartCaclPhase(ip: ConstUdpArg.Src_OrigWaveIp, udpCommandSocket: udpCommandSocket);
                         waveSocket.SendOrigSwitchCommand(8, 1); // 八个通道一个时分
                         waveSocket.RcvResetEvent.Set();
@@ -1307,7 +1296,7 @@ namespace ArrayDisplay.UI
                         Console.WriteLine(exception);
                         throw;
                     }
-                   
+
 
                     finally
                     {
@@ -1316,7 +1305,7 @@ namespace ArrayDisplay.UI
                     btn_calPhase.Dispatcher.Invoke(() => { btn_calPhase.IsEnabled = true; });
                     waveSocket.Dispose();
                 });
-     
+
             }
         }
 
@@ -1353,7 +1342,7 @@ namespace ArrayDisplay.UI
 
                     Array.Copy(sourceArray: Bresults, destinationArray: Bvalues, length: Bresults.Length);
 
-                    
+
                     blistview.Dispatcher.Invoke(() =>
                     {
                         observableCollection.Clear();
@@ -1386,7 +1375,6 @@ namespace ArrayDisplay.UI
             if (!IsOrigReplay)
             {
                 btn_origreplay.Content = "正在回放";
-                byte[] buffBytes;
 
                 List<string> fileList = GetFileDialogList(); // 选择
                 if (fileList == null)
@@ -1425,7 +1413,6 @@ namespace ArrayDisplay.UI
 
             var fileList = new List<string>(); // 文件列表
 
-            byte[] buffBytes;
             if (open.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 // 打开

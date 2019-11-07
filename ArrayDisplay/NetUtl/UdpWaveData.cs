@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="UdpWaveData.cs" company="">
-//   
+//
 // </copyright>
 // <summary>
 //   Defines the UdpWaveData type.
@@ -29,7 +29,7 @@ namespace ArrayDisplay.NetUtl
         /// The frame nums.
         /// 一帧数据长度
         /// </summary>
-        public static int FrameNums; 
+        public static int FrameNums;
 
         public static ConstUdpArg.WaveType waveType; // 波形数据类型
 
@@ -199,18 +199,18 @@ namespace ArrayDisplay.NetUtl
                     }
                     catch (Exception e)
                     {
-                    LogHelper.LogInfo("Socket.Both");
+                    LogHelper.LogInfo(e.Message);
                     throw;
                     }
 
                     try
                     {
-                        
+
                         waveSocket.Close(100);
                     }
                     catch (Exception e)
                     {
-                        LogHelper.LogInfo("Socket Close");
+                        LogHelper.LogInfo(e.Message);
                         throw;
                     }
 
@@ -292,7 +292,7 @@ namespace ArrayDisplay.NetUtl
                             SocketFlags.None,
                             ref senderRemote);
                     }
-                   
+
                 }
                 catch (Exception e)
                 {
@@ -315,14 +315,11 @@ namespace ArrayDisplay.NetUtl
             IPEndPoint remote = new IPEndPoint(IPAddress.Any, 0);
             EndPoint senderRemote = remote;
             LogHelper.LogInfo(@"启动UDP线程...");
-            
-            Task<bool> processTask = null;
 
             while (true)
             {
                 StartRcvEvent.WaitOne();
 
-                bool isRcvBuf = false;
                 if (IsStopRcved)
                 {
                     return;
@@ -389,7 +386,7 @@ namespace ArrayDisplay.NetUtl
                                     recSendBytes.AddRange(recTmpBytes.ToArray());
                                     recTmpBytes.Clear();
                                 }
-                                
+
                                 Splikbytes = PutWorkData(recSendBytes.ToArray());
                                 var savetmp = saveBytes.ToArray();
 
@@ -416,7 +413,7 @@ namespace ArrayDisplay.NetUtl
                             LogHelper.LogError(e);
                             throw;
                         }
-                       
+
                     });
                 saveBytes.Clear();
                 recTmpBytes.Clear();
@@ -459,7 +456,7 @@ namespace ArrayDisplay.NetUtl
                 {
                     if (waveSocket.Available!=0)
                     {
-                        // 接收数据                         
+                        // 接收数据
                         int ret = waveSocket.ReceiveFrom(
                             rcvBuf,
                             0,
@@ -585,7 +582,7 @@ namespace ArrayDisplay.NetUtl
             {
                 return null;
             }
-            
+
             if (!Equals(Ip, ConstUdpArg.Src_NormWaveIp))
             {
                 return null;
