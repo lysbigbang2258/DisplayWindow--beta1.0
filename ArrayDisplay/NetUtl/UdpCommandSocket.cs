@@ -238,13 +238,6 @@ namespace ArrayDisplay.NetUtl
         /// </summary>
         public void GetDeviceState()
         {
-            if (!IsSocketConnect)
-            {
-                MessageBox.Show("网络未连接");
-                LogHelper.LogInfo("网络未连接");
-                return;
-            }
-
             // 读取:设备类型
             ReadDeviceType();
             Thread.Sleep(200);
@@ -572,7 +565,7 @@ namespace ArrayDisplay.NetUtl
 
         #endregion
 
-        #region 系统参数(读),数据接收      
+        #region 系统参数(读),数据接收
 
         /// <summary>
         ///     接收设备类型数据

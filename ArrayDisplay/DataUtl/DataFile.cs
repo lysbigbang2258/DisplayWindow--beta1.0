@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ArrayDisplay.BaseUtl;
 using ArrayDisplay.DiscFile;
 using ArrayDisplay.NetUtl;
 using ArrayDisplay.UI;
@@ -38,7 +39,7 @@ namespace ArrayDisplay.DataUtl {
         int workLength;
         Thread workThread;
 
-       
+
         #endregion
 
         #region Property
@@ -64,7 +65,7 @@ namespace ArrayDisplay.DataUtl {
             workResetEvent = new AutoResetEvent(false);
             RelativeDirectory rd = new RelativeDirectory();
             origLength = ConstUdpArg.SAVE_ORIGPACK;
-            workLength = 10 * 3;//三秒左右数据
+            workLength = 3;//三秒左右数据
             string inipath = Environment.CurrentDirectory + "\\wavedata";
             if (!Directory.Exists(inipath)) {
                 Directory.CreateDirectory(inipath);
@@ -186,7 +187,7 @@ namespace ArrayDisplay.DataUtl {
         /// <param name="sender"></param>
         /// <param name="data"></param>
         void WriteOrigData(object sender, byte[] data) {
-            
+
             if (!IsStartFlag) {
                 return;
             }
@@ -246,7 +247,7 @@ namespace ArrayDisplay.DataUtl {
             var floatlist = new List<float>();
             if (waveData == WaveData.Origdata) {
                 var tmp = new byte[2];
-                
+
                 for (int i = 0; i < (sourceBytes.Length / 2 - 1); i++)
                 {
                     tmp[0] = sourceBytes[i * 2 + 1];
@@ -321,9 +322,9 @@ namespace ArrayDisplay.DataUtl {
                             }
                         }
                     }
-                    catch(Exception e) {
-
-                        Console.WriteLine(e);
+                    catch(Exception e)
+                    {
+                        LogHelper.LogError(e);
                         throw;
                     }
                 }
@@ -374,7 +375,7 @@ namespace ArrayDisplay.DataUtl {
             }
             string str = SetNowTimeStr(WaveData.WorkData);
             filename = filepath + str;
-            workLength = DisPlayWindow.Info.WorkSaveTime * ConstUdpArg.WORK_SAVE_PACK_PER;
+            workLength = DisPlayWindow.Info.WorkSaveTime;
             workResetEvent.Set();
         }
 
@@ -391,7 +392,7 @@ namespace ArrayDisplay.DataUtl {
             IsOfflineFlag = true;
             origResetEvent.Dispose();
             workResetEvent.Dispose();
-            
+
         }
 
         #endregion

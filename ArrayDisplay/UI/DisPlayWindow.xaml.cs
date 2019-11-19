@@ -166,6 +166,7 @@ namespace ArrayDisplay.UI
             IsOrigReplay = false;
             IsWorkReplay = false;
             Cancellation = new CancellationTokenSource();
+
         }
 
         #region IDisposable
@@ -239,6 +240,7 @@ namespace ArrayDisplay.UI
             blistview.ItemsSource = observableCollection;
 
             ControlsSetBinding();
+
         }
 
         /// <summary>
@@ -246,19 +248,16 @@ namespace ArrayDisplay.UI
         /// </summary>
         private void LoadDeviceState()
         {
-            Task.Run(() =>
+            udpCommandSocket.SwitchWindow(cmdBytes: ConstUdpArg.SwicthToStateWindow);
+            try
             {
-                udpCommandSocket.SwitchWindow(cmdBytes: ConstUdpArg.SwicthToStateWindow);
-                try
-                {
-                    udpCommandSocket.GetDeviceState();
-                }
-                catch (Exception exception)
-                {
-                    LogHelper.LogError(exception);
-                    MessageBox.Show("网络未连接");
-                }
-            });
+                udpCommandSocket.GetDeviceState();
+            }
+            catch (Exception exception)
+            {
+                LogHelper.LogError(exception);
+                MessageBox.Show("网络未连接");
+            }
         }
 
         /// <summary>

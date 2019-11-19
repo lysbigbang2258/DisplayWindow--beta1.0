@@ -985,7 +985,7 @@
                                                 Adjuster="None"
                                                 MinorDivisions="{x:Null}"
                                                 Orientation="Horizontal"
-                                                Range="0,31250" />
+                                                Range="0,3125" />
                                             <ni:AxisDouble
                                                 x:Name="yScale"
                                                 Adjuster="None "
